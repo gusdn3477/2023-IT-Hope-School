@@ -7,14 +7,7 @@ import Farm from './Farm';
 const Farms = () => {
   return (
     <FarmsWrapper>
-      <TopFarmsWrapper>
-        <Farm />
-        <Farm />
-      </TopFarmsWrapper>
-      <BottomFarmsWrapper>
-        <Farm />
-        <Farm />
-      </BottomFarmsWrapper>
+      <Farm />
     </FarmsWrapper>
   );
 };

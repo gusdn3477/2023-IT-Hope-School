@@ -17,12 +17,10 @@ export const Landing = observer(() => {
 
   return (
     <S.LandingWrapper>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
+      <div style={{ marginTop: '150px' }}>
+        <img src={viteLogo} className="logo" alt="Vite logo" />
       </div>
-      <h1>Tmax 농장</h1>
+      <h1>Tmax IT 희망농장</h1>
       <S.ButtonWrapper>
         {userStore.isLogin ? (
           <>
