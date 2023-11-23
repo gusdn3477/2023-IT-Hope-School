@@ -6,7 +6,7 @@ export const StyledHeader = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 72px;
-  background-color: red;
+  background-color: blue;
 `;
 
 export const OutletWrapper = styled.div`

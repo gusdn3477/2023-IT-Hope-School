@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import viteLogo from '/vite.svg';
+import gameLogo from '/logo.png';
 import * as S from './style';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../hooks/useStore';
@@ -17,8 +18,14 @@ export const Landing = observer(() => {
 
   return (
     <S.LandingWrapper>
-      <div style={{ marginTop: '150px' }}>
-        <img src={viteLogo} className="logo" alt="Vite logo" />
+      <div style={{ marginTop: '70px' }}>
+        <img
+          src={gameLogo}
+          className="logo"
+          alt="logo"
+          width={200}
+          height={200}
+        />
       </div>
       <h1>Tmax IT 희망농장</h1>
       <S.ButtonWrapper>
