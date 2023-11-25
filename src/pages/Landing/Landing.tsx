@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import viteLogo from '/vite.svg';
 import gameLogo from '/logo.png';
 import * as S from './style';
 import { observer } from 'mobx-react-lite';
@@ -7,9 +6,12 @@ import { useStore } from '../../hooks/useStore';
 import { SignupModal } from '../../component/modal/Signup';
 import { LoginModal } from '../../component/modal/Login';
 import { useNavigate } from 'react-router-dom';
+import login from '../../assets/login.png';
+import register from '../../assets/register.png';
+import logout from '../../assets/logout.png';
+import play from '../../assets/play.png';
 
 export const Landing = observer(() => {
-  const [count, setCount] = useState(0);
   const { userStore } = useStore();
   const navigate = useNavigate();
 
@@ -27,26 +29,40 @@ export const Landing = observer(() => {
           height={200}
         />
       </div>
-      <h1>Tmax IT 희망농장</h1>
+      <h1>IT 희망농장</h1>
       <S.ButtonWrapper>
         {userStore.isLogin ? (
           <>
-            <S.StyledButton onClick={() => navigate('main')}>
-              시작하기
-            </S.StyledButton>
-            <S.StyledButton onClick={() => userStore.logout()}>
-              로그아웃
-            </S.StyledButton>
+            <img
+              src={play}
+              width={240}
+              height={80}
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate('main')}
+            />
+            <img
+              src={logout}
+              width={240}
+              height={80}
+              style={{ cursor: 'pointer' }}
+              onClick={() => userStore.logout()}
+            />
           </>
         ) : (
           <>
-            <S.StyledButton onClick={() => setLoginModalOpen(true)}>
-              로그인
-            </S.StyledButton>
+            <img
+              src={login}
+              width={240}
+              height={80}
+              onClick={() => setLoginModalOpen(true)}
+            />
 
-            <S.StyledButton onClick={() => setSignupModalOpen(true)}>
-              회원가입
-            </S.StyledButton>
+            <img
+              src={register}
+              width={240}
+              height={80}
+              onClick={() => setSignupModalOpen(true)}
+            />
 
             <LoginModal
               open={loginModalOpen}

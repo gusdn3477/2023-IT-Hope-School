@@ -25,7 +25,7 @@ export const MenuPopover = observer(
           horizontal: 'left',
         }}
       >
-        <Typography sx={{ p: 2 }}>
+        <Typography sx={{ p: 2, cursor: 'pointer' }}>
           <ListItem>내 정보</ListItem>
           <ListItem onClick={() => userStore.logout()}>로그아웃</ListItem>
         </Typography>

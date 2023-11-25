@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { RadioButtonsGroup } from '../signup/genderRadioButton';
 
 interface SignupModalProps {
   open: boolean;
@@ -49,6 +50,7 @@ export const SignupModal = ({ open, handleClose }: SignupModalProps) => {
           fullWidth
           variant="standard"
         />
+        <RadioButtonsGroup />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>닫기</Button>

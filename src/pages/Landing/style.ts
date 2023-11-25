@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import background from '../../assets/grass.png';
 
 export const LandingWrapper = styled.div`
   width: 100%;
@@ -6,6 +7,8 @@ export const LandingWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  background-image: url(${background});
+  background-size: 100%;
 `;
 
 export const ButtonWrapper = styled.div`

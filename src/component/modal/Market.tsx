@@ -1,4 +1,3 @@
-import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
@@ -6,37 +5,46 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import { blue } from '@mui/material/colors';
+import potatobag from '../../assets/potatobag.png';
+import sweetPotatobag from '../../assets/sweetpotatobag.png';
+import carrotbag from '../../assets/carrotbag.png';
+import melonbag from '../../assets/melonbag.png';
+import tomatobag from '../../assets/tomatobag.png';
 
 const marketItems = [
   {
     id: 1,
     name: '감자',
+    imgSrc: potatobag,
     price: 50,
     day: 1,
   },
   {
     id: 2,
     name: '고구마',
+    imgSrc: sweetPotatobag,
     price: 60,
     day: 1,
   },
   {
     id: 3,
     name: '당근',
+    imgSrc: carrotbag,
     price: 100,
     day: 2,
   },
   {
-    id: 5,
-    name: '토마토',
-    price: 500,
+    id: 4,
+    name: '수박',
+    imgSrc: melonbag,
+    price: 1000,
     day: 3,
   },
   {
-    id: 4,
-    name: '수박',
-    price: 1000,
+    id: 5,
+    name: '토마토',
+    imgSrc: tomatobag,
+    price: 500,
     day: 3,
   },
 ];
@@ -71,7 +79,7 @@ export const MarketModal = (props: SimpleDialogProps) => {
           <ListItem disableGutters key={item.id}>
             <ListItemButton onClick={() => handleListItemClick('123')}>
               <ListItemAvatar>
-                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}></Avatar>
+                <img src={item.imgSrc} width={24} height={24} />
               </ListItemAvatar>
               <ListItemText primary={item.name + '씨앗'} />
               <ListItemText primary={item.day} />

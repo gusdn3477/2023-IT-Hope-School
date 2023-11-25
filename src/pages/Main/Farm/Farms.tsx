@@ -1,20 +1,23 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import ground from '../../../assets/ground.png';
 
 const StyledFarmGrid = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  height: 800px;
+  width: 1250px;
 `;
 
 const StyledGridItem = styled.div`
   display: flex;
-  margin: 5px;
-  padding: 20px;
-  width: 320px;
-  height: 120px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 160px;
+  background-image: url(${ground});
   border: 1px solid #ccc;
   cursor: pointer;
 `;
@@ -32,7 +35,18 @@ const Farms = () => {
       for (let j = 0; j < 4; j++) {
         items.push(
           <StyledGridItem key={`${i}-${j}`}>
-            셀 {i + 1}-{j + 1}
+            <div>
+              셀 {i + 1}-{j + 1}
+            </div>
+            <div>
+              셀 {i + 1}-{j + 1}
+            </div>
+            <div>
+              셀 {i + 1}-{j + 1}
+            </div>
+            <div>
+              셀 {i + 1}-{j + 1}
+            </div>
           </StyledGridItem>,
         );
       }
