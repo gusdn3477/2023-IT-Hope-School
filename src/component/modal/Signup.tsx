@@ -13,7 +13,7 @@ interface SignupModalProps {
 }
 export const SignupModal = ({ open, handleClose }: SignupModalProps) => {
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} disableScrollLock>
       <DialogTitle>회원가입</DialogTitle>
       <DialogContent>
         <DialogContentText>

@@ -19,7 +19,7 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
     handleClose();
   };
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} disableScrollLock>
       <DialogTitle>로그인</DialogTitle>
       <DialogContent>
         <TextField

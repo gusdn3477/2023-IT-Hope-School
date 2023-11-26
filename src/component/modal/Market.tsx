@@ -66,13 +66,13 @@ export const MarketModal = (props: SimpleDialogProps) => {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} disableScrollLock>
       <DialogTitle>상점</DialogTitle>
       <List sx={{ width: '400px' }}>
         <ListItem disableGutters>
           <ListItemText primary={'사진'} />
           <ListItemText primary={'이름'} />
-          <ListItemText primary={'열매까지 날짜'} />
+          <ListItemText primary={'수확까지 필요한 일수'} />
           <ListItemText primary={'가격'} />
         </ListItem>
         {marketItems.map((item) => (
@@ -83,7 +83,7 @@ export const MarketModal = (props: SimpleDialogProps) => {
               </ListItemAvatar>
               <ListItemText primary={item.name + '씨앗'} />
               <ListItemText primary={item.day} />
-              <ListItemText primary={item.price} />
+              <ListItemText primary={item.price + '원'} />
             </ListItemButton>
           </ListItem>
         ))}

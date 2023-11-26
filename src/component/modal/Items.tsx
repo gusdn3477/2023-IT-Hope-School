@@ -6,38 +6,51 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import { blue } from '@mui/material/colors';
+import potatobag from '../../assets/potatobag.png';
+import sweetPotatobag from '../../assets/sweetpotatobag.png';
+import carrotbag from '../../assets/carrotbag.png';
+import melonbag from '../../assets/melonbag.png';
+import tomatobag from '../../assets/tomatobag.png';
 
-const marketItems = [
+export interface ItemModel {
+  id: number;
+  name: string;
+}
+const items = [
   {
     id: 1,
     name: '감자',
-    price: 50,
+    imgSrc: potatobag,
     day: 1,
+    count: 50,
   },
   {
     id: 2,
     name: '고구마',
-    price: 60,
+    imgSrc: sweetPotatobag,
     day: 1,
+    count: 60,
   },
   {
     id: 3,
     name: '당근',
-    price: 100,
+    imgSrc: carrotbag,
     day: 2,
-  },
-  {
-    id: 5,
-    name: '토마토',
-    price: 500,
-    day: 3,
+    count: 100,
   },
   {
     id: 4,
     name: '수박',
-    price: 1000,
+    imgSrc: melonbag,
     day: 3,
+    count: 20,
+  },
+  {
+    id: 5,
+    name: '토마토',
+    imgSrc: tomatobag,
+    day: 3,
+    count: 20,
   },
 ];
 
@@ -45,6 +58,7 @@ export interface SimpleDialogProps {
   open: boolean;
   selectedValue: string;
   onClose: (value: string) => void;
+  onClick?: () => void;
 }
 
 export const ItemsModal = (props: SimpleDialogProps) => {
@@ -59,7 +73,7 @@ export const ItemsModal = (props: SimpleDialogProps) => {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} disableScrollLock>
       <DialogTitle>아이템</DialogTitle>
       <List sx={{ width: '400px' }}>
         <ListItem disableGutters>
@@ -68,15 +82,15 @@ export const ItemsModal = (props: SimpleDialogProps) => {
           <ListItemText primary={'열매까지 날짜'} />
           <ListItemText primary={'갯수'} />
         </ListItem>
-        {marketItems.map((item) => (
+        {items.map((item) => (
           <ListItem disableGutters key={item.id}>
             <ListItemButton onClick={() => handleListItemClick('123')}>
               <ListItemAvatar>
-                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}></Avatar>
+                <img src={item.imgSrc} width={24} height={24} />
               </ListItemAvatar>
-              <ListItemText primary={item.name} />
+              <ListItemText primary={item.name + '씨앗'} />
               <ListItemText primary={item.day} />
-              <ListItemText primary={item.price} />
+              <ListItemText primary={item.count} />
             </ListItemButton>
           </ListItem>
         ))}

@@ -24,6 +24,7 @@ export const MenuPopover = observer(
           vertical: 'bottom',
           horizontal: 'left',
         }}
+        disableScrollLock
       >
         <Typography sx={{ p: 2, cursor: 'pointer' }}>
           <ListItem>내 정보</ListItem>
