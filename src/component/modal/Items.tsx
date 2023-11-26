@@ -1,56 +1,72 @@
-import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
 import potatobag from '../../assets/potatobag.png';
 import sweetPotatobag from '../../assets/sweetpotatobag.png';
 import carrotbag from '../../assets/carrotbag.png';
 import melonbag from '../../assets/melonbag.png';
 import tomatobag from '../../assets/tomatobag.png';
+import {
+  StyledDialog,
+  StyledDialogTitle,
+  StyledListItem,
+  StyledListItemText,
+} from './style';
 
 export interface ItemModel {
   id: number;
   name: string;
 }
-const items = [
+export const items = [
   {
-    id: 1,
+    id: 0,
     name: '감자',
     imgSrc: potatobag,
+    price: 50,
     day: 1,
     count: 50,
+    description:
+      '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 15~20원이다.',
+  },
+  {
+    id: 1,
+    name: '고구마',
+    imgSrc: sweetPotatobag,
+    price: 60,
+    day: 1,
+    count: 60,
+    description:
+      '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 15~25원이다.',
   },
   {
     id: 2,
-    name: '고구마',
-    imgSrc: sweetPotatobag,
-    day: 1,
-    count: 60,
+    name: '당근',
+    imgSrc: carrotbag,
+    price: 100,
+    day: 2,
+    count: 100,
+    description:
+      '수확 시에 1-2개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 45-60원이다.',
   },
   {
     id: 3,
-    name: '당근',
-    imgSrc: carrotbag,
-    day: 2,
-    count: 100,
+    name: '수박',
+    imgSrc: melonbag,
+    price: 1000,
+    day: 3,
+    count: 20,
+    description:
+      '수확 시에 3개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 300~500원이다.',
   },
   {
     id: 4,
-    name: '수박',
-    imgSrc: melonbag,
-    day: 3,
-    count: 20,
-  },
-  {
-    id: 5,
     name: '토마토',
     imgSrc: tomatobag,
+    price: 500,
     day: 3,
     count: 20,
+    description:
+      '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 150~200원이다.',
   },
 ];
 
@@ -62,39 +78,41 @@ export interface SimpleDialogProps {
 }
 
 export const ItemsModal = (props: SimpleDialogProps) => {
-  const { onClose, selectedValue, open } = props;
+  const { onClose, selectedValue, open, onClick } = props;
 
   const handleClose = () => {
     onClose(selectedValue);
   };
 
-  const handleListItemClick = (value: string) => {
-    onClose(value);
-  };
-
   return (
-    <Dialog onClose={handleClose} open={open} disableScrollLock>
-      <DialogTitle>아이템</DialogTitle>
-      <List sx={{ width: '400px' }}>
-        <ListItem disableGutters>
-          <ListItemText primary={'사진'} />
-          <ListItemText primary={'이름'} />
-          <ListItemText primary={'열매까지 날짜'} />
-          <ListItemText primary={'갯수'} />
-        </ListItem>
-        {items.map((item) => (
-          <ListItem disableGutters key={item.id}>
-            <ListItemButton onClick={() => handleListItemClick('123')}>
-              <ListItemAvatar>
-                <img src={item.imgSrc} width={24} height={24} />
-              </ListItemAvatar>
-              <ListItemText primary={item.name + '씨앗'} />
-              <ListItemText primary={item.day} />
-              <ListItemText primary={item.count} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Dialog>
+    <>
+      <StyledDialog onClose={handleClose} open={open} disableScrollLock>
+        <StyledDialogTitle>
+          <b>아이템</b>
+        </StyledDialogTitle>
+        <List>
+          <StyledListItem disableGutters>
+            <StyledListItemText primary={'사진'} />
+            <StyledListItemText primary={'이름'} />
+            <StyledListItemText primary={'열매까지 날짜'} />
+            <StyledListItemText primary={'갯수'} />
+            <StyledListItemText primary={'설명'} />
+          </StyledListItem>
+          {items.map((item) => (
+            <StyledListItem disableGutters key={item.id}>
+              <ListItemButton>
+                <ListItemAvatar>
+                  <img src={item.imgSrc} width={60} height={60} />
+                </ListItemAvatar>
+                <StyledListItemText primary={item.name + '씨앗'} />
+                <StyledListItemText primary={item.day + '일'} />
+                <StyledListItemText primary={item.count} />
+                <StyledListItemText primary={item.description} />
+              </ListItemButton>
+            </StyledListItem>
+          ))}
+        </List>
+      </StyledDialog>
+    </>
   );
 };

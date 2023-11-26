@@ -7,7 +7,7 @@ const StyledFarmGrid = styled.div`
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  width: 1250px;
+  width: 660px;
 `;
 
 const StyledGridItem = styled.div`
@@ -15,7 +15,7 @@ const StyledGridItem = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 300px;
+  width: 160px;
   height: 160px;
   background-image: url(${ground});
   border: 1px solid #ccc;
@@ -33,22 +33,7 @@ const Farms = () => {
     const items = [];
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        items.push(
-          <StyledGridItem key={`${i}-${j}`}>
-            <div>
-              셀 {i + 1}-{j + 1}
-            </div>
-            <div>
-              셀 {i + 1}-{j + 1}
-            </div>
-            <div>
-              셀 {i + 1}-{j + 1}
-            </div>
-            <div>
-              셀 {i + 1}-{j + 1}
-            </div>
-          </StyledGridItem>,
-        );
+        items.push(<StyledGridItem key={`${i}-${j}`}>{i + j}</StyledGridItem>);
       }
     }
     setGridItems(items);

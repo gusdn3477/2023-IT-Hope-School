@@ -1,11 +1,13 @@
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../hooks/useStore';
+import {
+  StyledButton,
+  StyledDialogActions,
+  StyledDialogTitle,
+  StyledTextField,
+} from './style';
 
 interface LoginModalProps {
   open: boolean;
@@ -20,9 +22,9 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
   };
   return (
     <Dialog open={open} onClose={handleClose} disableScrollLock>
-      <DialogTitle>로그인</DialogTitle>
+      <StyledDialogTitle>로그인</StyledDialogTitle>
       <DialogContent>
-        <TextField
+        <StyledTextField
           autoFocus
           margin="dense"
           id="name"
@@ -30,7 +32,7 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
           fullWidth
           variant="standard"
         />
-        <TextField
+        <StyledTextField
           margin="dense"
           id="password"
           label="비밀번호"
@@ -39,10 +41,10 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
           variant="standard"
         />
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>닫기</Button>
-        <Button onClick={handleLogin}>로그인</Button>
-      </DialogActions>
+      <StyledDialogActions>
+        <StyledButton onClick={handleLogin}>로그인</StyledButton>
+        <StyledButton onClick={handleClose}>닫기</StyledButton>
+      </StyledDialogActions>
     </Dialog>
   );
 });

@@ -29,7 +29,7 @@ export const Landing = observer(() => {
           height={200}
         />
       </div>
-      <h1>IT 희망농장</h1>
+      <h1 style={{ color: 'white' }}>IT 희망농장</h1>
       <S.ButtonWrapper>
         {userStore.isLogin ? (
           <>
@@ -54,13 +54,14 @@ export const Landing = observer(() => {
               src={login}
               width={240}
               height={80}
+              style={{ cursor: 'pointer' }}
               onClick={() => setLoginModalOpen(true)}
             />
-
             <img
               src={register}
               width={240}
               height={80}
+              style={{ cursor: 'pointer' }}
               onClick={() => setSignupModalOpen(true)}
             />
 

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import background from '../../../assets/grass.png';
+import background from '../../../assets/farm_main.jpg';
 
 export const StyledHeader = styled.div`
   display: flex;

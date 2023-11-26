@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import background from '../../assets/grass.png';
+import background from '../../assets/farm_image.jpg';
 
 export const LandingWrapper = styled.div`
   width: 100%;
@@ -17,7 +17,7 @@ export const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  & button {
+  & img {
     margin-top: 35px;
   }
 `;
