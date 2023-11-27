@@ -8,6 +8,7 @@ import melonbag from '../../assets/melonbag.png';
 import tomatobag from '../../assets/tomatobag.png';
 import {
   StyledDialog,
+  StyledDialogHeader,
   StyledDialogTitle,
   StyledListItem,
   StyledListItemText,
@@ -87,6 +88,7 @@ export const ItemsModal = (props: SimpleDialogProps) => {
   return (
     <>
       <StyledDialog onClose={handleClose} open={open} disableScrollLock>
+        <StyledDialogHeader onClick={handleClose}>X</StyledDialogHeader>
         <StyledDialogTitle>
           <b>아이템</b>
         </StyledDialogTitle>

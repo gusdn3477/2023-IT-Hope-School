@@ -19,3 +19,20 @@ export const OutletWrapper = styled.div`
   background-image: url(${background});
   background-size: 100%;
 `;
+
+export const StyledButtonWrapper = styled('div')`
+  & button {
+    margin: 6px;
+  }
+`;
+
+export const HeaderTitleWrapper = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+
+  & strong {
+    margin-right: 8px;
+  }
+`;

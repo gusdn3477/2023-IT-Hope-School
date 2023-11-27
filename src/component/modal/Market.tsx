@@ -4,6 +4,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Dialog from '@mui/material/Dialog';
 import {
   StyledDialog,
+  StyledDialogHeader,
   StyledDialogTitle,
   StyledListItem,
   StyledListItemText,
@@ -29,6 +30,7 @@ export const MarketModal = (props: SimpleDialogProps) => {
 
   return (
     <StyledDialog onClose={handleClose} open={open} disableScrollLock>
+      <StyledDialogHeader onClick={handleClose}>X</StyledDialogHeader>
       <StyledDialogTitle>
         <b>상점</b>
       </StyledDialogTitle>
