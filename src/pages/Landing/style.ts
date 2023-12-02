@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import background from '../../assets/menubg.png';
+import background from '../../assets/farm_image.jpg';
 
 export const LandingWrapper = styled.div`
   width: 100%;
@@ -8,7 +8,8 @@ export const LandingWrapper = styled.div`
   align-items: center;
   flex-direction: column;
   background-image: url(${background});
-  background-size: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
 `;
 
 export const ButtonWrapper = styled.div`
