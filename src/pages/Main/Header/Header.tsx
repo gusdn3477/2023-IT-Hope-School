@@ -46,7 +46,6 @@ export const Header = observer(() => {
               <img src={coin} width={24} height={24} />
               <strong>1000원</strong>
             </strong>
-            <strong>포인트 : 500점</strong>
           </HeaderTitleWrapper>
           <StyledButtonWrapper>
             <Button

@@ -22,7 +22,9 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
   };
   return (
     <Dialog open={open} onClose={handleClose} disableScrollLock>
-      <StyledDialogTitle>로그인</StyledDialogTitle>
+      <StyledDialogTitle style={{ fontFamily: 'Neo둥근모' }}>
+        로그인
+      </StyledDialogTitle>
       <DialogContent>
         <StyledTextField
           autoFocus

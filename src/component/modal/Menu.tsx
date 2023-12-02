@@ -20,7 +20,7 @@ export const MenuModal = observer(({ open, handleClose }: MenuModalProps) => {
   };
   return (
     <Dialog open={open} onClose={handleClose} disableScrollLock>
-      <DialogTitle>로그인</DialogTitle>
+      <DialogTitle style={{ fontFamily: 'Neo둥근모' }}>로그인</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
@@ -40,8 +40,12 @@ export const MenuModal = observer(({ open, handleClose }: MenuModalProps) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>닫기</Button>
-        <Button onClick={handleLogin}>로그인</Button>
+        <Button onClick={handleClose} style={{ fontFamily: 'Neo둥근모' }}>
+          닫기
+        </Button>
+        <Button onClick={handleLogin} style={{ fontFamily: 'Neo둥근모' }}>
+          로그인
+        </Button>
       </DialogActions>
     </Dialog>
   );

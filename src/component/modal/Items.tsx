@@ -106,42 +106,6 @@ export const ItemsModal = (props: SimpleDialogProps) => {
             ))}
           </TableBody>
         </TableContainer>
-
-        {/* <List style={{ overflowY: 'auto', padding: '20px' }}>
-          <StyledListItem disableGutters>
-            <StyledListItemText primary={'사진'} style={{ width: '80px' }} />
-            <StyledListItemText primary={'이름'} style={{ width: '90px' }} />
-            <StyledListItemText
-              primary={'열매까지 날짜'}
-              style={{ width: '70px', wordBreak: 'keep-all' }}
-            />
-            <StyledListItemText primary={'갯수'} style={{ width: '80px' }} />
-            <StyledListItemText primary={'설명'} style={{ width: '200px' }} />
-          </StyledListItem>
-          {items.map((item) => (
-            <StyledListItem disableGutters key={item.id}>
-              <ListItemAvatar style={{ width: '80px' }}>
-                <img src={item.bagImgSrc} width={60} height={60} />
-              </ListItemAvatar>
-              <StyledListItemText
-                primary={item.name + '씨앗'}
-                style={{ width: '90px' }}
-              />
-              <StyledListItemText
-                primary={item.day + '일'}
-                style={{ width: '70px' }}
-              />
-              <StyledListItemText
-                primary={item.count}
-                style={{ width: '80px' }}
-              />
-              <StyledListItemText
-                primary={item.description}
-                style={{ width: '200px' }}
-              />
-            </StyledListItem>
-          ))}
-        </List> */}
       </StyledDialog>
     </>
   );

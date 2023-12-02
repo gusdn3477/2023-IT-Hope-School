@@ -26,6 +26,13 @@ const StyledTableCell = styled(TableCell)`
   word-break: keep-all;
 `;
 
+const StyledTextField = styled(TextField)`
+  width: 80px;
+  input {
+    font-family: 'Neo둥근모';
+  }
+`;
+
 export const MarketModal = (props: SimpleDialogProps) => {
   const { onClose, open } = props;
 
@@ -125,12 +132,11 @@ export const MarketModal = (props: SimpleDialogProps) => {
                 {item.description}
               </StyledTableCell>
               <StyledTableCell align="center">
-                <TextField
+                <StyledTextField
                   id="outlined-number"
                   type="number"
                   defaultValue={0}
                   onChange={(e) => handleChangeItem(e, item)}
-                  style={{ width: '80px' }}
                   InputProps={{ inputProps: { min: 0, max: 10 } }}
                   InputLabelProps={{
                     shrink: true,

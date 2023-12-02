@@ -33,9 +33,17 @@ const SleepModal = (props: SleepModalProps) => {
 
   return (
     <StyledDialog onClose={handleClose} open={open} disableScrollLock>
-      <DialogTitle style={{ textAlign: 'center' }}>Good Night</DialogTitle>
+      <DialogTitle
+        style={{
+          textAlign: 'center',
+          fontSize: '32px',
+          fontFamily: 'Neo둥근모',
+        }}
+      >
+        Good Night
+      </DialogTitle>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <img src={goodnight} style={{ width: '500px' }} />
+        <img src={goodnight} style={{ width: '600px' }} />
       </div>
     </StyledDialog>
   );

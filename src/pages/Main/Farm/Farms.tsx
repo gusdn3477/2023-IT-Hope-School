@@ -87,9 +87,7 @@ const Farms = () => {
             key={`${i}-${j}`}
             onClick={(e) => handleClickItem(e, `${i}-${j}`, i * 4 + j)}
             $tile={ground}
-          >
-            {i + j}
-          </StyledGridItem>,
+          ></StyledGridItem>,
         );
       }
     }
@@ -109,8 +107,18 @@ const Farms = () => {
             : undefined
         }
       >
-        <MenuItem onClick={handleClickPlant}>{'심기'}</MenuItem>
-        <MenuItem onClick={handleClickHarvest}>{'수확하기'}</MenuItem>
+        <MenuItem
+          onClick={handleClickPlant}
+          style={{ fontFamily: 'Neo둥근모' }}
+        >
+          {'심기'}
+        </MenuItem>
+        <MenuItem
+          onClick={handleClickHarvest}
+          style={{ fontFamily: 'Neo둥근모' }}
+        >
+          {'수확하기'}
+        </MenuItem>
       </Menu>
     </>
   );
