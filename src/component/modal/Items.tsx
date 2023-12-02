@@ -24,58 +24,6 @@ export interface ItemModel {
   id: number;
   name: string;
 }
-export const items = [
-  {
-    id: 0,
-    name: '감자',
-    imgSrc: potatobag,
-    price: 50,
-    day: 1,
-    count: 50,
-    description:
-      '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 15~20원이다.',
-  },
-  {
-    id: 1,
-    name: '고구마',
-    imgSrc: sweetPotatobag,
-    price: 60,
-    day: 1,
-    count: 60,
-    description:
-      '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 15~25원이다.',
-  },
-  {
-    id: 2,
-    name: '당근',
-    imgSrc: carrotbag,
-    price: 100,
-    day: 2,
-    count: 100,
-    description:
-      '수확 시에 1-2개의 열매를 가질 수 있다. 개당 가격은 45-60원이다.',
-  },
-  {
-    id: 3,
-    name: '수박',
-    imgSrc: melonbag,
-    price: 1000,
-    day: 3,
-    count: 20,
-    description:
-      '수확 시에 3개의 열매를 가질 수 있다. 개당 가격은 300~500원이다.',
-  },
-  {
-    id: 4,
-    name: '토마토',
-    imgSrc: tomatobag,
-    price: 500,
-    day: 3,
-    count: 20,
-    description:
-      '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 150~200원이다.',
-  },
-];
 
 export interface SimpleDialogProps {
   open: boolean;
