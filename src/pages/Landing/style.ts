@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import background from '../../assets/farm_image.jpg';
+import background from '../../assets/menubg.png';
 
 export const LandingWrapper = styled.div`
   width: 100%;

@@ -8,7 +8,7 @@ import {
   StyledHeader,
 } from './style';
 import { Outlet } from 'react-router-dom';
-import gameLogo from '/logo.png';
+import gameLogo from '../../../assets/logo2.png';
 import { MenuPopover } from '../../../component/popover/Menu';
 import { Button } from '@mui/material';
 import coin from '../../../assets/coin.png';
@@ -19,6 +19,7 @@ import BedtimeIcon from '@mui/icons-material/Bedtime';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import mainmenu from '../../../assets/mainmenu.png';
 
 export const Header = observer(() => {
   const [marketOpen, setMarketOpen] = useState(false);
@@ -34,7 +35,10 @@ export const Header = observer(() => {
   return (
     <>
       <StyledHeader>
-        <img src={gameLogo} width={50} height={50} />
+        <div style={{ display: 'flex' }}>
+          <img src={mainmenu} style={{ width: '72px' }} />
+          <img src={gameLogo} style={{ width: '96px', marginLeft: '12px' }} />
+        </div>
         <div style={{ display: 'flex' }}>
           <HeaderTitleWrapper>
             <strong>게임 시작한 지 : 4일</strong>
@@ -50,28 +54,32 @@ export const Header = observer(() => {
               variant="contained"
               style={{ fontFamily: 'Neo둥근모' }}
             >
-              잠들기 <BedtimeIcon />
+              잠들기 <BedtimeIcon style={{ width: '20px', height: '20px' }} />
             </Button>
             <Button
               variant="contained"
               onClick={() => setMarketOpen(true)}
               style={{ fontFamily: 'Neo둥근모' }}
             >
-              상점 <LocalGroceryStoreIcon />
+              상점{' '}
+              <LocalGroceryStoreIcon
+                style={{ width: '20px', height: '20px' }}
+              />
             </Button>
             <Button
               variant="contained"
               onClick={() => uiStore.setOpenItemModal(true)}
               style={{ fontFamily: 'Neo둥근모' }}
             >
-              아이템 <ShoppingBagIcon />
+              아이템{' '}
+              <ShoppingBagIcon style={{ width: '20px', height: '20px' }} />
             </Button>
             <Button
               variant="contained"
               onClick={(e) => setAnchorEl(e.currentTarget)}
               style={{ fontFamily: 'Neo둥근모' }}
             >
-              메뉴 <MenuIcon />
+              메뉴 <MenuIcon style={{ width: '20px', height: '20px' }} />
             </Button>
           </StyledButtonWrapper>
         </div>
