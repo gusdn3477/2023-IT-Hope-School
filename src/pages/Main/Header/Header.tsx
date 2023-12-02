@@ -15,6 +15,10 @@ import coin from '../../../assets/coin.png';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../hooks/useStore';
 import SleepModal from '../../../component/modal/Sleep';
+import BedtimeIcon from '@mui/icons-material/Bedtime';
+import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
+import MenuIcon from '@mui/icons-material/Menu';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 
 export const Header = observer(() => {
   const [marketOpen, setMarketOpen] = useState(false);
@@ -41,23 +45,33 @@ export const Header = observer(() => {
             <strong>포인트 : 500점</strong>
           </HeaderTitleWrapper>
           <StyledButtonWrapper>
-            <Button onClick={handleClickSleep} variant="contained">
-              잠들기
+            <Button
+              onClick={handleClickSleep}
+              variant="contained"
+              style={{ fontFamily: 'Neo둥근모' }}
+            >
+              잠들기 <BedtimeIcon />
             </Button>
-            <Button variant="contained" onClick={() => setMarketOpen(true)}>
-              상점
+            <Button
+              variant="contained"
+              onClick={() => setMarketOpen(true)}
+              style={{ fontFamily: 'Neo둥근모' }}
+            >
+              상점 <LocalGroceryStoreIcon />
             </Button>
             <Button
               variant="contained"
               onClick={() => uiStore.setOpenItemModal(true)}
+              style={{ fontFamily: 'Neo둥근모' }}
             >
-              아이템
+              아이템 <ShoppingBagIcon />
             </Button>
             <Button
               variant="contained"
               onClick={(e) => setAnchorEl(e.currentTarget)}
+              style={{ fontFamily: 'Neo둥근모' }}
             >
-              메뉴
+              메뉴 <MenuIcon />
             </Button>
           </StyledButtonWrapper>
         </div>

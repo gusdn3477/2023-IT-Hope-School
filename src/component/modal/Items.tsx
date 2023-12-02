@@ -11,11 +11,17 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { ItemInterface, items } from '../../constants/items';
 import { useStore } from '../../hooks/useStore';
+import styled from 'styled-components';
 
 export interface SimpleDialogProps {
   open: boolean;
   onClose: () => void;
 }
+
+const StyledTableCell = styled(TableCell)`
+  font-family: 'Neo둥근모';
+  word-break: keep-all;
+`;
 
 export const ItemsModal = (props: SimpleDialogProps) => {
   const { onClose, open } = props;
@@ -58,21 +64,21 @@ export const ItemsModal = (props: SimpleDialogProps) => {
         <TableContainer component={Paper}>
           <TableHead>
             <TableRow>
-              <TableCell align="center" style={{ width: '90px' }}>
+              <StyledTableCell align="center" style={{ width: '90px' }}>
                 사진
-              </TableCell>
-              <TableCell align="center" style={{ width: '90px' }}>
+              </StyledTableCell>
+              <StyledTableCell align="center" style={{ width: '90px' }}>
                 이름
-              </TableCell>
-              <TableCell align="center" style={{ width: '90px' }}>
+              </StyledTableCell>
+              <StyledTableCell align="center" style={{ width: '90px' }}>
                 열매까지 기간
-              </TableCell>
-              <TableCell align="center" style={{ width: '90px' }}>
+              </StyledTableCell>
+              <StyledTableCell align="center" style={{ width: '90px' }}>
                 갯수
-              </TableCell>
-              <TableCell align="center" style={{ width: '270px' }}>
+              </StyledTableCell>
+              <StyledTableCell align="center" style={{ width: '270px' }}>
                 설명
-              </TableCell>
+              </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -83,13 +89,19 @@ export const ItemsModal = (props: SimpleDialogProps) => {
                 style={{ cursor: 'pointer' }}
                 onClick={() => handleClickItem(item)}
               >
-                <TableCell align="center" component="th" scope="row">
+                <StyledTableCell align="center" component="th" scope="row">
                   <img src={item.bagImgSrc} width={60} height={60} />
-                </TableCell>
-                <TableCell align="center">{item.name + '씨앗'}</TableCell>
-                <TableCell align="center">{item.day + '일'}</TableCell>
-                <TableCell align="center">{item.count}</TableCell>
-                <TableCell align="center">{item.description}</TableCell>
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {item.name + '씨앗'}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {item.day + '일'}
+                </StyledTableCell>
+                <StyledTableCell align="center">{item.count}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {item.description}
+                </StyledTableCell>
               </TableRow>
             ))}
           </TableBody>

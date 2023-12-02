@@ -23,6 +23,7 @@ export const StyledDialogTitle = styled(DialogTitle)`
   justify-content: center;
   margin-bottom: 20px;
   font-size: 26px;
+  font-family: 'Neo둥근모';
 `;
 
 export const StyledDialogHeader = styled('div')`

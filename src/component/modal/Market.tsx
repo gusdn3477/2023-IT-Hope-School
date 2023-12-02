@@ -14,11 +14,17 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useState } from 'react';
 import _ from 'lodash';
+import styled from 'styled-components';
 
 export interface SimpleDialogProps {
   open: boolean;
   onClose: () => void;
 }
+
+const StyledTableCell = styled(TableCell)`
+  font-family: 'Neo둥근모';
+  word-break: keep-all;
+`;
 
 export const MarketModal = (props: SimpleDialogProps) => {
   const { onClose, open } = props;
@@ -77,24 +83,24 @@ export const MarketModal = (props: SimpleDialogProps) => {
       <TableContainer component={Paper} style={{ boxShadow: 'none' }}>
         <TableHead>
           <TableRow>
-            <TableCell align="center" style={{ width: '90px' }}>
+            <StyledTableCell align="center" style={{ width: '90px' }}>
               사진
-            </TableCell>
-            <TableCell align="center" style={{ width: '90px' }}>
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: '90px' }}>
               이름
-            </TableCell>
-            <TableCell align="center" style={{ width: '90px' }}>
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: '90px' }}>
               열매까지 기간
-            </TableCell>
-            <TableCell align="center" style={{ width: '90px' }}>
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: '90px' }}>
               가격
-            </TableCell>
-            <TableCell align="center" style={{ width: '270px' }}>
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: '270px' }}>
               설명
-            </TableCell>
-            <TableCell align="center" style={{ width: '80px' }}>
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: '80px' }}>
               개수
-            </TableCell>
+            </StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -103,14 +109,22 @@ export const MarketModal = (props: SimpleDialogProps) => {
               key={item.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell align="center" component="th" scope="row">
+              <StyledTableCell align="center" component="th" scope="row">
                 <img src={item.bagImgSrc} width={60} height={60} />{' '}
-              </TableCell>
-              <TableCell align="center">{item.name + '씨앗'}</TableCell>
-              <TableCell align="center">{item.day + '일'}</TableCell>
-              <TableCell align="center">{item.price + '원'}</TableCell>
-              <TableCell align="center">{item.description}</TableCell>
-              <TableCell align="center">
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                {item.name + '씨앗'}
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                {item.day + '일'}
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                {item.price + '원'}
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                {item.description}
+              </StyledTableCell>
+              <StyledTableCell align="center">
                 <TextField
                   id="outlined-number"
                   type="number"
@@ -122,7 +136,7 @@ export const MarketModal = (props: SimpleDialogProps) => {
                     shrink: true,
                   }}
                 />
-              </TableCell>
+              </StyledTableCell>
             </TableRow>
           ))}
         </TableBody>
