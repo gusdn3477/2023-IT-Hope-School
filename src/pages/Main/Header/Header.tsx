@@ -14,12 +14,18 @@ import { Button } from '@mui/material';
 import coin from '../../../assets/coin.png';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../hooks/useStore';
+import SleepModal from '../../../component/modal/Sleep';
 
 export const Header = observer(() => {
   const [marketOpen, setMarketOpen] = useState(false);
+  const [sleepModalOpen, setSleepModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const { uiStore } = useStore();
+
+  const handleClickSleep = () => {
+    setSleepModalOpen(true);
+  };
 
   return (
     <>
@@ -35,7 +41,9 @@ export const Header = observer(() => {
             <strong>포인트 : 500점</strong>
           </HeaderTitleWrapper>
           <StyledButtonWrapper>
-            <Button variant="contained">잠들기</Button>
+            <Button onClick={handleClickSleep} variant="contained">
+              잠들기
+            </Button>
             <Button variant="contained" onClick={() => setMarketOpen(true)}>
               상점
             </Button>
@@ -63,6 +71,10 @@ export const Header = observer(() => {
         }}
       />
       <MarketModal open={marketOpen} onClose={() => setMarketOpen(false)} />
+      <SleepModal
+        open={sleepModalOpen}
+        onClose={() => setSleepModalOpen(false)}
+      />
       <OutletWrapper>
         <Outlet />
       </OutletWrapper>

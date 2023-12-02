@@ -44,6 +44,7 @@ const Farms = () => {
   const handleClickItem = (
     event: React.MouseEvent<HTMLElement>,
     item: string,
+    farmId: number,
   ) => {
     setContextMenu(
       contextMenu === null
@@ -54,6 +55,7 @@ const Farms = () => {
         : null,
     );
     setSelectedItem(item);
+    uiStore.setSelectedFarmId(farmId);
     console.log(item);
   };
 
@@ -83,7 +85,7 @@ const Farms = () => {
         items.push(
           <StyledGridItem
             key={`${i}-${j}`}
-            onClick={(e) => handleClickItem(e, `${i}-${j}`)}
+            onClick={(e) => handleClickItem(e, `${i}-${j}`, i * 4 + j)}
             $tile={ground}
           >
             {i + j}

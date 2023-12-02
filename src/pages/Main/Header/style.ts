@@ -12,7 +12,7 @@ export const StyledHeader = styled.div`
 
 export const OutletWrapper = styled.div`
   width: 100%;
-  height: 100%;
+  height: calc(100% - 72px);
   display: flex;
   align-items: center;
   justify-content: center;
