@@ -17,3 +17,5 @@ class FarmRepository {
     return API.post('/plant', { id });
   }
 }
+
+export const farmRepository = new FarmRepository();

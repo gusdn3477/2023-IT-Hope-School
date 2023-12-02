@@ -31,9 +31,12 @@ const Farms = () => {
 
   const initializeGridItems = () => {
     const items = [];
+    let count = 0;
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        items.push(<StyledGridItem key={`${i}-${j}`}>{i + j}</StyledGridItem>);
+        items.push(
+          <StyledGridItem key={`${i}-${j}`}>{count++}</StyledGridItem>,
+        );
       }
     }
     setGridItems(items);

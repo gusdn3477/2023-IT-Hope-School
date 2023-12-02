@@ -21,3 +21,5 @@ class UserRepository {
     return API.post('/login', { id, password });
   }
 }
+
+export const userRepository = new UserRepository();

@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-
+import { userRepository } from '../repository/UserRepository';
 class UserStore {
   isLogin = false;
 
@@ -7,8 +7,19 @@ class UserStore {
     makeAutoObservable(this);
   }
 
-  login() {
-    this.isLogin = true;
+  async signup({ id, password, regiDate, nick, gender }) {
+    const res = await userRepository.signUp({
+      id,
+      password,
+      regiDate,
+      nick,
+      gender,
+    });
+    return res;
+  }
+  async login({ id, password }) {
+    const res = await userRepository.login({ id, password });
+    if (res) this.isLogin = true;
   }
 
   logout() {
