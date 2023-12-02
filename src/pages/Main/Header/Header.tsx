@@ -13,11 +13,14 @@ import { MenuPopover } from '../../../component/popover/Menu';
 import { Button } from '@mui/material';
 import coin from '../../../assets/coin.png';
 import { observer } from 'mobx-react-lite';
+import { useStore } from '../../../hooks/useStore';
 
 export const Header = observer(() => {
   const [marketOpen, setMarketOpen] = useState(false);
-  const [itemOpen, setItemOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const { uiStore } = useStore();
+
   return (
     <>
       <StyledHeader>
@@ -50,15 +53,13 @@ export const Header = observer(() => {
       </StyledHeader>
       <MenuPopover anchorEl={anchorEl} handleClose={() => setAnchorEl(null)} />
       <ItemsModal
-        open={itemOpen}
-        onClose={() => setItemOpen(false)}
-        selectedValue="123"
+        open={uiStore.openItemModal}
+        onClose={() => {
+          uiStore.setOpenItemModal(false);
+          uiStore.setSelectedFarmId(-1);
+        }}
       />
-      <MarketModal
-        open={marketOpen}
-        onClose={() => setMarketOpen(false)}
-        selectedValue="123"
-      />
+      <MarketModal open={marketOpen} onClose={() => setMarketOpen(false)} />
       <OutletWrapper>
         <Outlet />
       </OutletWrapper>

@@ -5,6 +5,7 @@ import { Menu, MenuItem } from '@mui/material';
 
 import ground from '../../../assets/ground.png';
 import grass from '../../../assets/grass.png';
+import { useStore } from '../../../hooks/useStore';
 
 const StyledFarmGrid = styled.div`
   display: flex;
@@ -38,6 +39,8 @@ const Farms = () => {
   const [gridItems, setGridItems] = useState<JSX.Element[]>([]);
   const [selectedItem, setSelectedItem] = useState('');
 
+  const { uiStore } = useStore();
+
   const handleClickItem = (
     event: React.MouseEvent<HTMLElement>,
     item: string,
@@ -60,6 +63,7 @@ const Farms = () => {
 
   const handleClickPlant = () => {
     console.log('handleClickPlant', selectedItem, import.meta.env.VITE_APP_URL);
+    uiStore.setOpenItemModal(true);
     handleCloseMenu();
   };
 
@@ -80,7 +84,7 @@ const Farms = () => {
           <StyledGridItem
             key={`${i}-${j}`}
             onClick={(e) => handleClickItem(e, `${i}-${j}`)}
-            $tile={(i + j) % 2 === 0 ? ground : grass}
+            $tile={ground}
           >
             {i + j}
           </StyledGridItem>,
