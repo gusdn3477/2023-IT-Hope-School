@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import gameLogo from '/logo.png';
+import gameLogo from '../../assets/logo.png';
 import * as S from './style';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../hooks/useStore';
@@ -20,13 +20,15 @@ export const Landing = observer(() => {
 
   return (
     <S.LandingWrapper>
-      <div style={{ marginTop: '70px' }}>
+      <div style={{ marginTop: '50px' }}>
         <img
           src={gameLogo}
           className="logo"
           alt="logo"
-          width={200}
-          height={200}
+          style={{
+            width: '350px',
+            objectFit: 'contain',
+          }}
         />
       </div>
       <h1 style={{ color: 'white' }}>IT 희망농장</h1>
