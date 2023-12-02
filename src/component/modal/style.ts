@@ -14,6 +14,7 @@ export const StyledDialog = styled(Dialog)`
   & .MuiDialog-paper {
     width: 800px;
     max-width: none;
+    overflow-y: hidden;
   }
 `;
 export const StyledDialogTitle = styled(DialogTitle)`
@@ -22,6 +23,7 @@ export const StyledDialogTitle = styled(DialogTitle)`
   justify-content: center;
   margin-bottom: 20px;
   font-size: 26px;
+  font-family: 'Neo둥근모';
 `;
 
 export const StyledDialogHeader = styled('div')`
@@ -74,9 +76,9 @@ export const StyledButton = styled(Button)`
 
 export const StyledListItemText = styled(ListItemText)`
   display: flex;
-  width: 180px;
   align-items: center;
   justify-content: center;
+  word-break: keep-all;
 `;
 
 export const StyledListItem = styled(ListItem)`
