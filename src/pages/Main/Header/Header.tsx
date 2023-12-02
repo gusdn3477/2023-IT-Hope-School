@@ -39,7 +39,10 @@ export const Header = observer(() => {
             <Button variant="contained" onClick={() => setMarketOpen(true)}>
               상점
             </Button>
-            <Button variant="contained" onClick={() => setItemOpen(true)}>
+            <Button
+              variant="contained"
+              onClick={() => uiStore.setOpenItemModal(true)}
+            >
               아이템
             </Button>
             <Button
