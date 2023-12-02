@@ -4,7 +4,6 @@ import styled, { css } from 'styled-components';
 import { Menu, MenuItem } from '@mui/material';
 
 import ground from '../../../assets/ground.png';
-import grass from '../../../assets/grass.png';
 import { useStore } from '../../../hooks/useStore';
 
 const StyledFarmGrid = styled.div`
@@ -80,6 +79,7 @@ const Farms = () => {
 
   const initializeGridItems = () => {
     const items = [];
+    const count = 0;
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         items.push(

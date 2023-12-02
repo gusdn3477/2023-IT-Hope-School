@@ -8,6 +8,7 @@ import {
   StyledDialogTitle,
   StyledTextField,
 } from './style';
+import { useState } from 'react';
 
 interface LoginModalProps {
   open: boolean;
@@ -15,9 +16,14 @@ interface LoginModalProps {
 }
 export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
   const { userStore } = useStore();
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    userStore.login();
+  const handleLogin = async () => {
+    userStore.login({
+      id,
+      password,
+    });
     handleClose();
   };
   return (
@@ -32,6 +38,7 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
           id="name"
           label="아이디"
           fullWidth
+          onChange={(e) => setId(e.target.value)}
           variant="standard"
         />
         <StyledTextField
@@ -39,6 +46,7 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
           id="password"
           label="비밀번호"
           type="password"
+          onChange={(e) => setPassword(e.target.value)}
           fullWidth
           variant="standard"
         />
