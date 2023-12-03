@@ -12,9 +12,10 @@ import {
   TextField,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
+import { marketStore } from '../../stores/MarketStore';
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -66,6 +67,13 @@ export const MarketModal = (props: SimpleDialogProps) => {
     handleClose();
   };
 
+  const getItem = async () => {
+    const res = await marketStore.get();
+    console.log('res', res);
+  };
+  useEffect(() => {
+    getItem();
+  }, []);
   return (
     <StyledDialog onClose={handleClose} open={open} disableScrollLock>
       <StyledDialogTitle

@@ -1,11 +1,20 @@
 import { makeAutoObservable } from 'mobx';
-import { farmRepository } from '../repository/FarmRepository';
+import { marketRepository } from '../repository/MarketRepository';
 
 class MarketStore {
   marketItem = {};
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  async get() {
+    try {
+      const res = await marketRepository.get();
+      return res.data;
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 
