@@ -18,13 +18,17 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
   const { userStore } = useStore();
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(false);
 
   const handleLogin = async () => {
-    userStore.login({
+    const res = await userStore.login({
       id,
       password,
     });
-    handleClose();
+    if (res) {
+      userStore.isLogin = true;
+      handleClose();
+    } else setError(true);
   };
   return (
     <Dialog open={open} onClose={handleClose} disableScrollLock>
@@ -50,6 +54,7 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
           fullWidth
           variant="standard"
         />
+        {error && <span>아이디와 비밀번호를 확인해 주세요.</span>}
       </DialogContent>
       <StyledDialogActions>
         <StyledButton onClick={handleLogin}>로그인</StyledButton>

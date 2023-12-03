@@ -6,3 +6,5 @@ class MarketRepository {
     return API.get('/market');
   }
 }
+
+export const marketRepository = new MarketRepository();

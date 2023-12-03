@@ -2,24 +2,36 @@ import { makeAutoObservable } from 'mobx';
 import { userRepository } from '../repository/UserRepository';
 class UserStore {
   isLogin = false;
+  id = '';
 
   constructor() {
     makeAutoObservable(this);
   }
 
   async signup({ id, password, regiDate, nick, gender }) {
-    const res = await userRepository.signUp({
-      id,
-      password,
-      regiDate,
-      nick,
-      gender,
-    });
-    return res;
+    try {
+      const res = await userRepository.signUp({
+        id,
+        password,
+        regiDate,
+        nick,
+        gender,
+      });
+      return res.data.success ?? false;
+    } catch (e) {
+      console.log(e);
+    }
   }
   async login({ id, password }) {
-    const res = await userRepository.login({ id, password });
-    if (res) this.isLogin = true;
+    try {
+      const res = await userRepository.login({ id, password });
+      if (res.data.success) {
+        this.id = res.data.id;
+      }
+      return res.data.success ?? false;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   logout() {

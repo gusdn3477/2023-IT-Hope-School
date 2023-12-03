@@ -25,11 +25,11 @@ export const Header = observer(() => {
   const [marketOpen, setMarketOpen] = useState(false);
   const [sleepModalOpen, setSleepModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { uiStore, farmStore, userStore } = useStore();
 
-  const { uiStore } = useStore();
-
-  const handleClickSleep = () => {
+  const handleClickSleep = async () => {
     setSleepModalOpen(true);
+    await farmStore.sleep({ id: userStore.id });
   };
 
   return (
