@@ -1,10 +1,4 @@
-import {
-  StyledDialog,
-  StyledDialogHeader,
-  StyledDialogTitle,
-  StyledListItem,
-  StyledListItemText,
-} from './style';
+import { StyledDialog, StyledDialogTitle } from './style';
 
 import {
   IconButton,
