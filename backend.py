@@ -58,6 +58,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
                     "15" : {"id" : "15"},
                   },
                   "money" : 10000,
+                  "day": 0,
                   "bag" : {
                       
                   }
@@ -86,6 +87,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
                 result = {
                   "success": True,
                   "id" : account["id"],
+                  "day" : account["day"],
                   "regiDate" : account["regiDate"],
                   "nick" : account["nick"],
                   "gender" : account["gender"],
@@ -111,6 +113,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
 
             file_market=open('market.json', 'r', encoding="UTF-8")
             market = json.load(file_market)
+            accounts[json_data['id']]['day'] += 1
             
             for i in range(len(accounts[json_data['id']]['farm'])):
               if 'item' in accounts[json_data['id']]['farm'][str(i)]:
@@ -118,16 +121,16 @@ class WebRequestHandler(BaseHTTPRequestHandler):
                 if accounts[json_data['id']]['farm'][str(i)]['item']['day'] == market[accounts[json_data['id']]['farm'][str(i)]['item']['itemId']]['term']:
                     accounts[json_data['id']]['farm'][str(i)]['item']['complete'] = True
           
-            data = json.dumps(accounts, indent = 4, sort_keys = True, ensure_ascii=False)
+            data = json.dumps(accounts[json_data['id']], indent = 4, sort_keys = True, ensure_ascii=False)
             
             file_account= open('account.json', 'w', encoding="UTF-8")
             file_account.write(data)
-          
+
+            file_account.close()
+            file_market.close()          
 
             self.wfile.write(data.encode('UTF-8'))
 
-            file_account.close()
-            file_market.close()
 
 
         # 씨앗구입 완료 // dto : id, itemId
@@ -149,7 +152,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
 
             # 가방에 넣어주기 
             account['bag'][json_data['itemId']]=market_data[json_data['itemId']] #index확인 필요 
-            data = json.dumps(account_data, indent = 4, sort_keys = True, ensure_ascii=False)
+            data = json.dumps(account_data[json_data['id']], indent = 4, sort_keys = True, ensure_ascii=False)
             file = open('account.json', 'w')
             file.write(data)
             file.close()
@@ -172,7 +175,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
                 account_data[json_data['id']]['money']+=json_data['money']
                 del account_data[json_data['id']]['farm'][json_data['farmId']]['item'] # id확인해주세요
 
-            data = json.dumps(account_data, indent = 4, sort_keys = True, ensure_ascii=False)
+            data = json.dumps(account_data[json_data['id']], indent = 4, sort_keys = True, ensure_ascii=False)
             file = open('account.json', 'w')
             file.write(data)
             self.wfile.write(data.encode('UTF-8'))
@@ -190,7 +193,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             del account_data[json_data['id']]['bag'][json_data['itemId']]
             account_data[json_data['id']]['farm'][json_data['farmId']]['item'] = {'complete': False ,'day':0,'itemId':json_data['itemId']}
             
-            data = json.dumps(account_data, indent = 4, sort_keys = True, ensure_ascii=False)
+            data = json.dumps(account_data[json_data['id']], indent = 4, sort_keys = True, ensure_ascii=False)
             file = open('account.json', 'w')
             file.write(data)
             self.wfile.write(data.encode('UTF-8'))

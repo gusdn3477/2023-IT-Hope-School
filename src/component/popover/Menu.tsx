@@ -27,7 +27,6 @@ export const MenuPopover = observer(
         disableScrollLock
       >
         <Typography sx={{ cursor: 'pointer' }}>
-          <ListItem style={{ fontFamily: 'Neo둥근모' }}>내 정보</ListItem>
           <ListItem
             onClick={() => userStore.logout()}
             style={{ fontFamily: 'Neo둥근모' }}

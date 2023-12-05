@@ -5,7 +5,7 @@ import melonbag from '../assets/melonbag.png';
 import tomatobag from '../assets/tomatobag.png';
 
 export interface ItemInterface {
-  id: number;
+  id: number; // 스트링으로 변경해야될듯
   name: string;
   bagImgSrc: string;
   price: number;

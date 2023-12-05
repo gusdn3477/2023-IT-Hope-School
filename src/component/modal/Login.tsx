@@ -30,8 +30,13 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
       handleClose();
     } else setError(true);
   };
+
+  const handleCloseClick = () => {
+    setError(false);
+    handleClose();
+  };
   return (
-    <Dialog open={open} onClose={handleClose} disableScrollLock>
+    <Dialog open={open} onClose={handleCloseClick} disableScrollLock>
       <StyledDialogTitle style={{ fontFamily: 'Neo둥근모' }}>
         로그인
       </StyledDialogTitle>
@@ -58,7 +63,7 @@ export const LoginModal = observer(({ open, handleClose }: LoginModalProps) => {
       </DialogContent>
       <StyledDialogActions>
         <StyledButton onClick={handleLogin}>로그인</StyledButton>
-        <StyledButton onClick={handleClose}>닫기</StyledButton>
+        <StyledButton onClick={handleCloseClick}>닫기</StyledButton>
       </StyledDialogActions>
     </Dialog>
   );

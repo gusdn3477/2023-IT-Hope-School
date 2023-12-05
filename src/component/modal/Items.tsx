@@ -15,7 +15,7 @@ import { useStore } from '../../hooks/useStore';
 import styled from 'styled-components';
 
 export interface ItemModel {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -88,9 +88,9 @@ export const ItemsModal = (props: SimpleDialogProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((item) => (
+            {items.map((item, idx) => (
               <TableRow
-                key={item.id}
+                key={idx}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 style={{ cursor: 'pointer' }}
                 onClick={() => handleClickItem(item)}

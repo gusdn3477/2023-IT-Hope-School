@@ -5,6 +5,13 @@ class MarketRepository {
   get() {
     return API.get('/market');
   }
+
+  buy({ id, itemId }: { id: string; itemId: string }) {
+    return API.post('buy', {
+      id,
+      itemId,
+    });
+  }
 }
 
 export const marketRepository = new MarketRepository();

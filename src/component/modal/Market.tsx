@@ -16,6 +16,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { marketStore } from '../../stores/MarketStore';
+import { observer } from 'mobx-react-lite';
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -34,7 +35,7 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
-export const MarketModal = (props: SimpleDialogProps) => {
+export const MarketModal = observer((props: SimpleDialogProps) => {
   const { onClose, open } = props;
 
   const [selectedItemList, setSelectedItemList] = useState<ItemInterface[]>([]);
@@ -47,7 +48,6 @@ export const MarketModal = (props: SimpleDialogProps) => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     selectedItem: ItemInterface,
   ) => {
-    console.log(selectedItem);
     const copiedItemList = _.cloneDeep(selectedItemList);
     let found = false;
     copiedItemList.map((item) => {
@@ -62,18 +62,12 @@ export const MarketModal = (props: SimpleDialogProps) => {
     setSelectedItemList(copiedItemList);
   };
 
-  const handleClickBuy = () => {
+  const handleClickBuy = async () => {
+    await marketStore.buy;
     console.log(selectedItemList);
     handleClose();
   };
 
-  const getItem = async () => {
-    const res = await marketStore.get();
-    console.log('res', res);
-  };
-  useEffect(() => {
-    getItem();
-  }, []);
   return (
     <StyledDialog onClose={handleClose} open={open} disableScrollLock>
       <StyledDialogTitle
@@ -119,9 +113,9 @@ export const MarketModal = (props: SimpleDialogProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {marketItems.map((item) => (
+          {marketItems.map((item, idx) => (
             <TableRow
-              key={item.id}
+              key={idx}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <StyledTableCell align="center" component="th" scope="row">
@@ -160,4 +154,4 @@ export const MarketModal = (props: SimpleDialogProps) => {
       </Button>
     </StyledDialog>
   );
-};
+});
