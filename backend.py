@@ -258,18 +258,20 @@ class WebRequestHandler(BaseHTTPRequestHandler):
                 "day": 0,
                 "itemId": json_data["itemId"],
             }
-
+            response = account_data[json_data["id"]]
             data = json.dumps(
-                account_data[json_data["id"]],
+                account_data,
                 indent=4,
                 sort_keys=True,
                 ensure_ascii=False,
             )
             file = open("account.json", "w")
             file.write(data)
-            self.wfile.write(data.encode("UTF-8"))
-
             file.close()
+            response_json = json.dumps(
+                response, indent=4, sort_keys=True, ensure_ascii=False
+            )
+            self.wfile.write(response_json.encode("UTF-8"))
 
     def do_GET(self):
         self.send_response(200)

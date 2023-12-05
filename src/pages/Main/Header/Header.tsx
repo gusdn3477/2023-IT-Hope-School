@@ -88,7 +88,7 @@ export const Header = observer(() => {
         open={uiStore.openItemModal}
         onClose={() => {
           uiStore.setOpenItemModal(false);
-          uiStore.setSelectedFarmId(-1);
+          uiStore.setSelectedFarmId('');
         }}
       />
       <MarketModal open={marketOpen} onClose={() => setMarketOpen(false)} />

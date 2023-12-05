@@ -34,15 +34,20 @@ const StyledTableCell = styled(TableCell)`
 export const ItemsModal = observer((props: SimpleDialogProps) => {
   const { onClose, open } = props;
 
-  const { uiStore, userStore } = useStore();
+  const { uiStore, userStore, farmStore } = useStore();
 
   const handleClose = () => {
     onClose();
   };
 
-  const handleClickItem = (item: ItemInterface) => {
-    if (uiStore.selectedFarmId !== -1) {
+  const handleClickItem = async (item: ItemInterface) => {
+    if (uiStore.selectedFarmId !== '') {
       console.log(uiStore.selectedFarmId, item);
+      const res = await farmStore.plant({
+        id: userStore.user.id,
+        farmId: uiStore.selectedFarmId,
+        itemId: item.id,
+      });
     }
     handleClose();
   };
@@ -92,28 +97,35 @@ export const ItemsModal = observer((props: SimpleDialogProps) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((item) => (
-                <TableRow
-                  key={item.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleClickItem(item)}
-                >
-                  <StyledTableCell align="center" component="th" scope="row">
-                    <img src={item.bagImgSrc} width={60} height={60} />
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {item.name + '씨앗'}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {item.day + '일'}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{item.count}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {item.description}
-                  </StyledTableCell>
-                </TableRow>
-              ))}
+              {Object.values(userStore.user.bag) &&
+                Object.values(userStore.user.bag).map((item) => (
+                  <TableRow
+                    key={item.id}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => handleClickItem(items[item.id])}
+                  >
+                    <StyledTableCell align="center" component="th" scope="row">
+                      <img
+                        src={items[item.id].bagImgSrc}
+                        width={60}
+                        height={60}
+                      />
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {items[item.id].name + '씨앗'}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {items[item.id].day + '일'}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {item.count}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {items[item.id].description}
+                    </StyledTableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>

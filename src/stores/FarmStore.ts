@@ -17,6 +17,24 @@ class FarmStore {
       console.log(e);
     }
   }
+
+  async plant({
+    id,
+    farmId,
+    itemId,
+  }: {
+    id: string;
+    farmId: string;
+    itemId: string;
+  }) {
+    try {
+      const res = await farmRepository.plant({ id, farmId, itemId });
+      userStore.user = res.data;
+      return res.data.farm;
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 export const farmStore = new FarmStore();

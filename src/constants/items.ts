@@ -13,8 +13,8 @@ export interface ItemInterface {
   count: number;
   description: string;
 }
-export const items = [
-  {
+export const items = {
+  '0': {
     id: '0',
     name: '감자',
     bagImgSrc: potatobag,
@@ -24,7 +24,7 @@ export const items = [
     description:
       '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 15~20원이다.',
   },
-  {
+  '1': {
     id: '1',
     name: '고구마',
     bagImgSrc: sweetPotatobag,
@@ -34,7 +34,7 @@ export const items = [
     description:
       '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 15~25원이다.',
   },
-  {
+  '2': {
     id: '2',
     name: '당근',
     bagImgSrc: carrotbag,
@@ -44,7 +44,7 @@ export const items = [
     description:
       '수확 시에 1-2개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 45-60원이다.',
   },
-  {
+  '3': {
     id: '3',
     name: '수박',
     bagImgSrc: melonbag,
@@ -54,7 +54,7 @@ export const items = [
     description:
       '수확 시에 3개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 300~500원이다.',
   },
-  {
+  '4': {
     id: '4',
     name: '토마토',
     bagImgSrc: tomatobag,
@@ -64,4 +64,4 @@ export const items = [
     description:
       '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 150~200원이다.',
   },
-];
+};

@@ -34,26 +34,27 @@ const Farms = () => {
     mouseY: number;
   } | null>(null);
   const [gridItems, setGridItems] = useState<JSX.Element[]>([]);
-  const [selectedItem, setSelectedItem] = useState('');
+  const [farmId, setFarmId] = useState('');
 
-  const { uiStore } = useStore();
+  const { userStore, uiStore } = useStore();
 
   const handleClickItem = (
     event: React.MouseEvent<HTMLElement>,
-    item: string,
-    farmId: number,
+    farmId: string,
   ) => {
-    setContextMenu(
-      contextMenu === null
-        ? {
-            mouseX: event.clientX + 2,
-            mouseY: event.clientY - 6,
-          }
-        : null,
-    );
-    setSelectedItem(item);
+    const id = `${farmId}`;
+    const targetTileInfo = userStore.user?.farm[id];
+
+    if (targetTileInfo)
+      setContextMenu(
+        contextMenu === null
+          ? {
+              mouseX: event.clientX + 2,
+              mouseY: event.clientY - 6,
+            }
+          : null,
+      );
     uiStore.setSelectedFarmId(farmId);
-    console.log(item);
   };
 
   const handleCloseMenu = () => {
@@ -61,13 +62,13 @@ const Farms = () => {
   };
 
   const handleClickPlant = () => {
-    console.log('handleClickPlant', selectedItem, import.meta.env.VITE_APP_URL);
+    console.log('handleClickPlant', import.meta.env.VITE_APP_URL);
     uiStore.setOpenItemModal(true);
     handleCloseMenu();
   };
 
   const handleClickHarvest = () => {
-    console.log('handleClickHarvest', selectedItem);
+    console.log('handleClickHarvest');
     handleCloseMenu();
   };
 
@@ -82,8 +83,8 @@ const Farms = () => {
       for (let j = 0; j < 4; j++) {
         items.push(
           <StyledGridItem
-            key={`${i}-${j}`}
-            onClick={(e) => handleClickItem(e, `${i}-${j}`, i * 4 + j)}
+            key={`${i * 4 + j}`}
+            onClick={(e) => handleClickItem(e, `${i * 4 + j}`)}
             $tile={ground}
           ></StyledGridItem>,
         );
@@ -105,18 +106,22 @@ const Farms = () => {
             : undefined
         }
       >
-        <MenuItem
-          onClick={handleClickPlant}
-          style={{ fontFamily: 'Neo둥근모' }}
-        >
-          {'심기'}
-        </MenuItem>
-        <MenuItem
-          onClick={handleClickHarvest}
-          style={{ fontFamily: 'Neo둥근모' }}
-        >
-          {'수확하기'}
-        </MenuItem>
+        {userStore.user?.farm?.farmId?.item === undefined && (
+          <MenuItem
+            onClick={handleClickPlant}
+            style={{ fontFamily: 'Neo둥근모' }}
+          >
+            {'심기'}
+          </MenuItem>
+        )}
+        {userStore.user?.farm?.farmId?.item?.complete === true && (
+          <MenuItem
+            onClick={handleClickHarvest}
+            style={{ fontFamily: 'Neo둥근모' }}
+          >
+            {'수확하기'}
+          </MenuItem>
+        )}
       </Menu>
     </>
   );

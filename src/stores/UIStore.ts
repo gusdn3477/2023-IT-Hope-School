@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx';
 
 class UIStore {
   _selectedItemId = -1;
-  _selectedFarmId = -1;
+  _selectedFarmId = '';
   _openMarketModal = false;
   _openItemModal = false;
 
@@ -18,7 +18,7 @@ class UIStore {
     return this._selectedItemId;
   }
 
-  setSelectedFarmId(id: number) {
+  setSelectedFarmId(id: string) {
     this._selectedFarmId = id;
   }
 

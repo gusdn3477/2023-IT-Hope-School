@@ -145,7 +145,7 @@ export const MarketModal = observer((props: SimpleDialogProps) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {marketItems.map((item) => (
+              {Object.values(marketItems).map((item) => (
                 <TableRow
                   key={item.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
