@@ -3,6 +3,7 @@ import { StyledDialog, StyledDialogTitle } from './style';
 import {
   IconButton,
   Paper,
+  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -67,50 +68,52 @@ export const ItemsModal = (props: SimpleDialogProps) => {
         >
           <CloseIcon />
         </IconButton>
-        <TableContainer component={Paper}>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center" style={{ width: '90px' }}>
-                사진
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: '90px' }}>
-                이름
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: '90px' }}>
-                열매까지 기간
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: '90px' }}>
-                갯수
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: '270px' }}>
-                설명
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {items.map((item) => (
-              <TableRow
-                key={item.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleClickItem(item)}
-              >
-                <StyledTableCell align="center" component="th" scope="row">
-                  <img src={item.bagImgSrc} width={60} height={60} />
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="center" style={{ width: '90px' }}>
+                  사진
                 </StyledTableCell>
-                <StyledTableCell align="center">
-                  {item.name + '씨앗'}
+                <StyledTableCell align="center" style={{ width: '90px' }}>
+                  이름
                 </StyledTableCell>
-                <StyledTableCell align="center">
-                  {item.day + '일'}
+                <StyledTableCell align="center" style={{ width: '90px' }}>
+                  열매까지 기간
                 </StyledTableCell>
-                <StyledTableCell align="center">{item.count}</StyledTableCell>
-                <StyledTableCell align="center">
-                  {item.description}
+                <StyledTableCell align="center" style={{ width: '90px' }}>
+                  갯수
+                </StyledTableCell>
+                <StyledTableCell align="center" style={{ width: '270px' }}>
+                  설명
                 </StyledTableCell>
               </TableRow>
-            ))}
-          </TableBody>
+            </TableHead>
+            <TableBody>
+              {items.map((item) => (
+                <TableRow
+                  key={item.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleClickItem(item)}
+                >
+                  <StyledTableCell align="center" component="th" scope="row">
+                    <img src={item.bagImgSrc} width={60} height={60} />
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {item.name + '씨앗'}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {item.day + '일'}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">{item.count}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {item.description}
+                  </StyledTableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </TableContainer>
       </StyledDialog>
     </>

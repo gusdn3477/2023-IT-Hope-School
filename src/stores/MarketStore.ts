@@ -16,6 +16,15 @@ class MarketStore {
       console.log(e);
     }
   }
+
+  async buy(dto: { id: string; items: { itemId: string; count: number }[] }) {
+    try {
+      const res = await marketRepository.buy(dto);
+      return res.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 export const marketStore = new MarketStore();

@@ -4,6 +4,7 @@ import {
   Button,
   IconButton,
   Paper,
+  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -15,7 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useEffect, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import { marketStore } from '../../stores/MarketStore';
+import { useStore } from '../../hooks/useStore';
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -36,10 +37,11 @@ const StyledTextField = styled(TextField)`
 
 export const MarketModal = (props: SimpleDialogProps) => {
   const { onClose, open } = props;
-
+  const { userStore, marketStore } = useStore();
   const [selectedItemList, setSelectedItemList] = useState<ItemInterface[]>([]);
 
   const handleClose = () => {
+    setSelectedItemList([]);
     onClose();
   };
 
@@ -47,23 +49,39 @@ export const MarketModal = (props: SimpleDialogProps) => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     selectedItem: ItemInterface,
   ) => {
-    console.log(selectedItem);
-    const copiedItemList = _.cloneDeep(selectedItemList);
+    let copiedItemList = _.cloneDeep(selectedItemList);
     let found = false;
-    copiedItemList.map((item) => {
-      if (item.id === selectedItem.id) {
-        item.count = Number(e.target.value);
-        found = true;
+    const num = Number(e.target.value);
+    if (num === 0) {
+      copiedItemList = copiedItemList.filter(
+        (item) => item.id !== selectedItem.id,
+      );
+    } else {
+      copiedItemList.map((item) => {
+        if (item.id === selectedItem.id) {
+          item.count = num;
+          found = true;
+        }
+      });
+      if (!found) {
+        copiedItemList.push({ ...selectedItem, count: 1 });
       }
-    });
-    if (!found) {
-      copiedItemList.push({ ...selectedItem, count: 1 });
     }
     setSelectedItemList(copiedItemList);
   };
 
-  const handleClickBuy = () => {
+  const handleClickBuy = async () => {
     console.log(selectedItemList);
+    const dto = {
+      id: userStore.id,
+      items: selectedItemList.map((item) => {
+        return {
+          itemId: item.id,
+          count: item.count,
+        };
+      }),
+    };
+    const res = await marketStore.buy(dto);
     handleClose();
   };
 
@@ -96,66 +114,72 @@ export const MarketModal = (props: SimpleDialogProps) => {
         <CloseIcon />
       </IconButton>
       <TableContainer component={Paper} style={{ boxShadow: 'none' }}>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell align="center" style={{ width: '90px' }}>
-              사진
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: '90px' }}>
-              이름
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: '90px' }}>
-              열매까지 기간
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: '90px' }}>
-              가격
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: '270px' }}>
-              설명
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: '80px' }}>
-              개수
-            </StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {marketItems.map((item) => (
-            <TableRow
-              key={item.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <StyledTableCell align="center" component="th" scope="row">
-                <img src={item.bagImgSrc} width={60} height={60} />{' '}
+        <Table>
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align="center" style={{ width: '90px' }}>
+                사진
               </StyledTableCell>
-              <StyledTableCell align="center">
-                {item.name + '씨앗'}
+              <StyledTableCell align="center" style={{ width: '90px' }}>
+                이름
               </StyledTableCell>
-              <StyledTableCell align="center">
-                {item.day + '일'}
+              <StyledTableCell align="center" style={{ width: '90px' }}>
+                열매까지 기간
               </StyledTableCell>
-              <StyledTableCell align="center">
-                {item.price + '원'}
+              <StyledTableCell align="center" style={{ width: '90px' }}>
+                가격
               </StyledTableCell>
-              <StyledTableCell align="center">
-                {item.description}
+              <StyledTableCell align="center" style={{ width: '270px' }}>
+                설명
               </StyledTableCell>
-              <StyledTableCell align="center">
-                <StyledTextField
-                  id="outlined-number"
-                  type="number"
-                  defaultValue={0}
-                  onChange={(e) => handleChangeItem(e, item)}
-                  InputProps={{ inputProps: { min: 0, max: 10 } }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
+              <StyledTableCell align="center" style={{ width: '80px' }}>
+                개수
               </StyledTableCell>
             </TableRow>
-          ))}
-        </TableBody>
+          </TableHead>
+          <TableBody>
+            {marketItems.map((item) => (
+              <TableRow
+                key={item.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <StyledTableCell align="center" component="th" scope="row">
+                  <img src={item.bagImgSrc} width={60} height={60} />{' '}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {item.name + '씨앗'}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {item.day + '일'}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {item.price + '원'}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {item.description}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <StyledTextField
+                    id="outlined-number"
+                    type="number"
+                    defaultValue={0}
+                    onChange={(e) => handleChangeItem(e, item)}
+                    InputProps={{ inputProps: { min: 0, max: 10 } }}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </StyledTableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </TableContainer>
-      <Button onClick={handleClickBuy} style={{ height: '56px' }}>
+      <Button
+        onClick={handleClickBuy}
+        style={{ height: '56px', fontFamily: 'Neo둥근모' }}
+        disabled={selectedItemList.length === 0}
+      >
         구입하기
       </Button>
     </StyledDialog>

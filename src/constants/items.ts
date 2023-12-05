@@ -5,7 +5,7 @@ import melonbag from '../assets/melonbag.png';
 import tomatobag from '../assets/tomatobag.png';
 
 export interface ItemInterface {
-  id: number;
+  id: string;
   name: string;
   bagImgSrc: string;
   price: number;
@@ -15,7 +15,7 @@ export interface ItemInterface {
 }
 export const items = [
   {
-    id: 0,
+    id: '0',
     name: '감자',
     bagImgSrc: potatobag,
     price: 50,
@@ -25,7 +25,7 @@ export const items = [
       '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 15~20원이다.',
   },
   {
-    id: 1,
+    id: '1',
     name: '고구마',
     bagImgSrc: sweetPotatobag,
     price: 60,
@@ -35,7 +35,7 @@ export const items = [
       '수확 시에 3-5개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 15~25원이다.',
   },
   {
-    id: 2,
+    id: '2',
     name: '당근',
     bagImgSrc: carrotbag,
     price: 100,
@@ -45,7 +45,7 @@ export const items = [
       '수확 시에 1-2개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 45-60원이다.',
   },
   {
-    id: 3,
+    id: '3',
     name: '수박',
     bagImgSrc: melonbag,
     price: 1000,
@@ -55,7 +55,7 @@ export const items = [
       '수확 시에 3개의 열매를 가질 수 있다. 개당 가격은 상태에 따라 다르며, 300~500원이다.',
   },
   {
-    id: 4,
+    id: '4',
     name: '토마토',
     bagImgSrc: tomatobag,
     price: 500,

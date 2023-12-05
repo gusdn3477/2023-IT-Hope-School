@@ -5,10 +5,6 @@ class FarmRepository {
     return API.post('/sleep', { id });
   }
 
-  buy({ id, itemId }: { id: string; itemId: string }) {
-    return API.post('/buy', { id, itemId });
-  }
-
   harvest({
     id,
     farmId,
