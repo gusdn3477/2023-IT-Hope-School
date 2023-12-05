@@ -94,11 +94,12 @@ const Farms = observer(() => {
           tile = vine;
         }
         items.push(
-          <div key={`${i * 4 + j}`} style={{ position: 'relative' }}>
-            <StyledGridItem
-              onClick={(e) => handleClickItem(e, `${i * 4 + j}`)}
-              $tile={ground}
-            ></StyledGridItem>
+          <div
+            onClick={(e) => handleClickItem(e, `${i * 4 + j}`)}
+            key={`${i * 4 + j}`}
+            style={{ position: 'relative' }}
+          >
+            <StyledGridItem $tile={ground}></StyledGridItem>
             {tile !== '' && (
               <img
                 src={tile}

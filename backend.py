@@ -137,17 +137,18 @@ class WebRequestHandler(BaseHTTPRequestHandler):
                             "complete"
                         ] = True
 
-            data = json.dumps(
-                accounts[json_data["id"]], indent=4, sort_keys=True, ensure_ascii=False
-            )
+            response = accounts[json_data["id"]]
+            data = json.dumps(accounts, indent=4, sort_keys=True, ensure_ascii=False)
 
             file_account = open("account.json", "w", encoding="UTF-8")
             file_account.write(data)
-
             file_account.close()
             file_market.close()
 
-            self.wfile.write(data.encode("UTF-8"))
+            response_json = json.dumps(
+                response, indent=4, sort_keys=True, ensure_ascii=False
+            )
+            self.wfile.write(response_json.encode("UTF-8"))
 
         # 씨앗구입 완료 // dto : { id, items: { itemId, count }[] }
         elif parsed.path == "/buy":
