@@ -70,7 +70,7 @@ export const Header = observer(() => {
               onClick={() => uiStore.setOpenItemModal(true)}
               style={{ fontFamily: 'Neo둥근모' }}
             >
-              아이템{' '}
+              아이템
               <ShoppingBagIcon style={{ width: '20px', height: '20px' }} />
             </Button>
             <Button

@@ -128,6 +128,11 @@ export const ItemsModal = observer((props: SimpleDialogProps) => {
                 ))}
             </TableBody>
           </Table>
+          {Object.values(userStore.user.bag).length === 0 && (
+            <div style={{ textAlign: 'center', padding: '24px' }}>
+              {'상점에서 아이템을 구입하세요!'}
+            </div>
+          )}
         </TableContainer>
       </StyledDialog>
     </>
