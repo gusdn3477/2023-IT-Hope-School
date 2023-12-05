@@ -16,7 +16,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useEffect, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
+<<<<<<< HEAD
 import { useStore } from '../../hooks/useStore';
+=======
+import { marketStore } from '../../stores/MarketStore';
+import { observer } from 'mobx-react-lite';
+>>>>>>> 8b14f85b3d1368f42a9253c0341fb9047b457349
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -35,7 +40,7 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
-export const MarketModal = (props: SimpleDialogProps) => {
+export const MarketModal = observer((props: SimpleDialogProps) => {
   const { onClose, open } = props;
   const { userStore, marketStore } = useStore();
   const [selectedItemList, setSelectedItemList] = useState<ItemInterface[]>([]);
@@ -49,7 +54,11 @@ export const MarketModal = (props: SimpleDialogProps) => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     selectedItem: ItemInterface,
   ) => {
+<<<<<<< HEAD
     let copiedItemList = _.cloneDeep(selectedItemList);
+=======
+    const copiedItemList = _.cloneDeep(selectedItemList);
+>>>>>>> 8b14f85b3d1368f42a9253c0341fb9047b457349
     let found = false;
     const num = Number(e.target.value);
     if (num === 0) {
@@ -85,13 +94,6 @@ export const MarketModal = (props: SimpleDialogProps) => {
     handleClose();
   };
 
-  const getItem = async () => {
-    const res = await marketStore.get();
-    console.log('res', res);
-  };
-  useEffect(() => {
-    getItem();
-  }, []);
   return (
     <StyledDialog onClose={handleClose} open={open} disableScrollLock>
       <StyledDialogTitle
@@ -114,11 +116,44 @@ export const MarketModal = (props: SimpleDialogProps) => {
         <CloseIcon />
       </IconButton>
       <TableContainer component={Paper} style={{ boxShadow: 'none' }}>
+<<<<<<< HEAD
         <Table>
           <TableHead>
             <TableRow>
               <StyledTableCell align="center" style={{ width: '90px' }}>
                 사진
+=======
+        <TableHead>
+          <TableRow>
+            <StyledTableCell align="center" style={{ width: '90px' }}>
+              사진
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: '90px' }}>
+              이름
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: '90px' }}>
+              열매까지 기간
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: '90px' }}>
+              가격
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: '270px' }}>
+              설명
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: '80px' }}>
+              개수
+            </StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {marketItems.map((item, idx) => (
+            <TableRow
+              key={idx}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <StyledTableCell align="center" component="th" scope="row">
+                <img src={item.bagImgSrc} width={60} height={60} />{' '}
+>>>>>>> 8b14f85b3d1368f42a9253c0341fb9047b457349
               </StyledTableCell>
               <StyledTableCell align="center" style={{ width: '90px' }}>
                 이름
@@ -184,4 +219,4 @@ export const MarketModal = (props: SimpleDialogProps) => {
       </Button>
     </StyledDialog>
   );
-};
+});

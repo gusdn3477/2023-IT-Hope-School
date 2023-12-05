@@ -1,9 +1,8 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, toJS } from 'mobx';
 import { userRepository } from '../repository/UserRepository';
 class UserStore {
   isLogin = false;
-  id = '';
-
+  user = {};
   constructor() {
     makeAutoObservable(this);
   }
@@ -26,6 +25,7 @@ class UserStore {
     try {
       const res = await userRepository.login({ id, password });
       if (res.data.success) {
+        this.user = toJS(res.data);
         this.id = res.data.id;
       }
       return res.data.success ?? false;
