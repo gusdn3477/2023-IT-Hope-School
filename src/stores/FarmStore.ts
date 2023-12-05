@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, toJS } from 'mobx';
 import { farmRepository } from '../repository/FarmRepository';
 import { userStore } from './UserStore';
 class FarmStore {
@@ -29,7 +29,7 @@ class FarmStore {
   }) {
     try {
       const res = await farmRepository.plant({ id, farmId, itemId });
-      userStore.user = res.data;
+      userStore.user = toJS(res.data);
       return res.data.farm;
     } catch (e) {
       console.log(e);

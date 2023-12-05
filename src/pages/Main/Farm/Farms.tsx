@@ -3,8 +3,12 @@ import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Menu, MenuItem } from '@mui/material';
 
+import vine from '../../../assets/vine.png';
+import seed from '../../../assets/seed.png';
 import ground from '../../../assets/ground.png';
 import { useStore } from '../../../hooks/useStore';
+import { items as marketItems } from '../../../constants/items';
+import { observer } from 'mobx-react-lite';
 
 const StyledFarmGrid = styled.div`
   display: grid;
@@ -28,13 +32,12 @@ const StyledGridItem = styled.div<{ $tile?: string }>`
     `}
 `;
 
-const Farms = () => {
+const Farms = observer(() => {
   const [contextMenu, setContextMenu] = useState<{
     mouseX: number;
     mouseY: number;
   } | null>(null);
   const [gridItems, setGridItems] = useState<JSX.Element[]>([]);
-  const [farmId, setFarmId] = useState('');
 
   const { userStore, uiStore } = useStore();
 
@@ -74,19 +77,41 @@ const Farms = () => {
 
   useEffect(() => {
     initializeGridItems();
-  }, []);
+  }, [userStore.user]);
 
   const initializeGridItems = () => {
     const items = [];
     const count = 0;
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
+        let tile = '';
+        const targetTileInfo = userStore.user?.farm[`${i * 4 + j}`].item;
+        if (targetTileInfo?.complete) {
+          tile = marketItems[targetTileInfo.itemId].grownImgSrc;
+        } else if (targetTileInfo?.day === 0) {
+          tile = seed;
+        } else if (targetTileInfo) {
+          tile = vine;
+        }
         items.push(
-          <StyledGridItem
-            key={`${i * 4 + j}`}
-            onClick={(e) => handleClickItem(e, `${i * 4 + j}`)}
-            $tile={ground}
-          ></StyledGridItem>,
+          <div key={`${i * 4 + j}`} style={{ position: 'relative' }}>
+            <StyledGridItem
+              onClick={(e) => handleClickItem(e, `${i * 4 + j}`)}
+              $tile={ground}
+            ></StyledGridItem>
+            {tile !== '' && (
+              <img
+                src={tile}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  width: '160px',
+                  height: '160px',
+                  objectFit: 'contain',
+                }}
+              />
+            )}
+          </div>,
         );
       }
     }
@@ -125,6 +150,6 @@ const Farms = () => {
       </Menu>
     </>
   );
-};
+});
 
 export default Farms;

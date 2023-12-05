@@ -1,8 +1,13 @@
 import potatobag from '../assets/potatobag.png';
+import grownPotato from '../assets/grown_potato.png';
 import sweetPotatobag from '../assets/sweetpotatobag.png';
+import grownSweetPotato from '../assets/grown_sweetpotato.png';
 import carrotbag from '../assets/carrotbag.png';
+import grownCarrot from '../assets/grown_carrot.png';
 import melonbag from '../assets/melonbag.png';
+import grownMelon from '../assets/grown_melon.png';
 import tomatobag from '../assets/tomatobag.png';
+import grownTomato from '../assets/grown_tomato.png';
 
 export interface ItemInterface {
   id: string;
@@ -18,6 +23,7 @@ export const items = {
     id: '0',
     name: '감자',
     bagImgSrc: potatobag,
+    grownImgSrc: grownPotato,
     price: 50,
     day: 1,
     count: 60,
@@ -28,6 +34,7 @@ export const items = {
     id: '1',
     name: '고구마',
     bagImgSrc: sweetPotatobag,
+    grownImgSrc: grownSweetPotato,
     price: 60,
     day: 1,
     count: 60,
@@ -38,6 +45,7 @@ export const items = {
     id: '2',
     name: '당근',
     bagImgSrc: carrotbag,
+    grownImgSrc: grownCarrot,
     price: 100,
     day: 2,
     count: 100,
@@ -48,6 +56,7 @@ export const items = {
     id: '3',
     name: '수박',
     bagImgSrc: melonbag,
+    grownImgSrc: grownMelon,
     price: 1000,
     day: 3,
     count: 20,
@@ -58,6 +67,7 @@ export const items = {
     id: '4',
     name: '토마토',
     bagImgSrc: tomatobag,
+    grownImgSrc: grownTomato,
     price: 500,
     day: 3,
     count: 20,
