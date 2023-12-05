@@ -7,11 +7,8 @@ import ground from '../../../assets/ground.png';
 import { useStore } from '../../../hooks/useStore';
 
 const StyledFarmGrid = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 660px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
 `;
 
 const StyledGridItem = styled.div<{ $tile?: string }>`
@@ -22,6 +19,7 @@ const StyledGridItem = styled.div<{ $tile?: string }>`
   width: 160px;
   height: 160px;
   border: 0.5px solid #d6b469;
+  box-sizing: border-box;
   cursor: pointer;
   ${({ $tile }) =>
     $tile &&
