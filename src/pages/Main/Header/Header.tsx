@@ -41,10 +41,10 @@ export const Header = observer(() => {
         </div>
         <div style={{ display: 'flex' }}>
           <HeaderTitleWrapper>
-            <strong>게임 시작한 지 {userStore.day}일 </strong>
+            <strong>게임 시작한 지 {userStore.user.day}일 </strong>
             <strong style={{ display: 'flex', alignItems: 'center' }}>
               <img src={coin} width={24} height={24} />
-              <strong>{userStore.money}원</strong>
+              <strong>{userStore.user.money}원</strong>
             </strong>
           </HeaderTitleWrapper>
           <StyledButtonWrapper>

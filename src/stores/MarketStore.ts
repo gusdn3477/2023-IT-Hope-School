@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { marketRepository } from '../repository/MarketRepository';
+import { userStore } from './UserStore';
 
 class MarketStore {
   marketItem = {};
@@ -20,6 +21,7 @@ class MarketStore {
   async buy({ id, itemId }: { id: string; itemId: string }) {
     try {
       const res = await marketRepository.buy({ id, itemId });
+      userStore.user = res.data;
       return res.data;
     } catch (e) {
       console.log(e);

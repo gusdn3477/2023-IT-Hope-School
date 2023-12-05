@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ItemInterface, items } from '../../constants/items';
 import { useStore } from '../../hooks/useStore';
 import styled from 'styled-components';
+import { observer } from 'mobx-react-lite';
 
 export interface ItemModel {
   id: string;
@@ -29,10 +30,10 @@ const StyledTableCell = styled(TableCell)`
   word-break: keep-all;
 `;
 
-export const ItemsModal = (props: SimpleDialogProps) => {
+export const ItemsModal = observer((props: SimpleDialogProps) => {
   const { onClose, open } = props;
 
-  const { uiStore } = useStore();
+  const { uiStore, userStore } = useStore();
 
   const handleClose = () => {
     onClose();
@@ -45,6 +46,7 @@ export const ItemsModal = (props: SimpleDialogProps) => {
     handleClose();
   };
 
+  // TODO: userStore.user.bag 이 객체라 map 함수를 못 씀
   return (
     <>
       <StyledDialog onClose={handleClose} open={open} disableScrollLock>
@@ -115,4 +117,4 @@ export const ItemsModal = (props: SimpleDialogProps) => {
       </StyledDialog>
     </>
   );
-};
+});
