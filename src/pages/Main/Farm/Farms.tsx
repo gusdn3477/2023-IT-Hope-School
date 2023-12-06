@@ -11,6 +11,7 @@ import { items as marketItems } from '../../../constants/items';
 import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
 import { farmStore } from '../../../stores/FarmStore';
+import HarvestModal from '../../../component/modal/Harvest';
 
 const StyledFarmGrid = styled.div`
   display: grid;
@@ -39,10 +40,11 @@ const Farms = observer(() => {
     mouseY: number;
   } | null>(null);
   const [gridItems, setGridItems] = useState<JSX.Element[]>([]);
+  const [harvestModalOpen, setHarvestModalOpen] = useState(false);
+  const [money, setMoney] = useState(0);
 
   const { userStore, uiStore } = useStore();
 
-  console.log('context', contextMenu);
   const handleClickItem = (
     event: React.MouseEvent<HTMLElement>,
     farmId: string,
@@ -63,7 +65,7 @@ const Farms = observer(() => {
   };
 
   const handleClickPlant = () => {
-    console.log('handleClickPlant', import.meta.env.VITE_APP_URL);
+    // console.log('handleClickPlant', import.meta.env.VITE_APP_URL);
     uiStore.setOpenItemModal(true);
     handleCloseMenu();
   };
@@ -71,30 +73,44 @@ const Farms = observer(() => {
   const handleClickHarvest = async () => {
     const targetTileInfo = userStore.user?.farm[uiStore.selectedFarmId].item;
     let count = 0;
-    let price = 0;
+    let money = 0;
     if (targetTileInfo.itemId === '0') {
       count = Math.floor(Math.random() * 3) + 3;
-      price = (15 + 20) / 2;
+      for (let i = 0; i < count; i++) {
+        money += Math.floor(Math.random() * 6) + 15;
+      }
     } else if (targetTileInfo.itemId === '1') {
       count = Math.floor(Math.random() * 3) + 3;
-      price = (15 + 25) / 2;
+      for (let i = 0; i < count; i++) {
+        money += Math.floor(Math.random() * 6) + 15;
+      }
     } else if (targetTileInfo.itemId === '2') {
       count = Math.floor(Math.random() * 2) + 1;
-      price = (45 + 60) / 2;
+      for (let i = 0; i < count; i++) {
+        money += Math.floor(Math.random() * 16) + 45;
+      }
     } else if (targetTileInfo.itemId === '3') {
       count = 3;
-      price = 400;
+      for (let i = 0; i < count; i++) {
+        money += Math.floor(Math.random() * 201) + 300;
+      }
     } else {
       count = Math.floor(Math.random() * 3) + 3;
-      price = (150 + 200) / 2;
+      for (let i = 0; i < count; i++) {
+        money += Math.floor(Math.random() * 51) + 150;
+      }
     }
 
-    const money = Math.round(count * price);
-    await farmStore.harvest({
+    const res = await farmStore.harvest({
       id: userStore.user.id,
       farmId: uiStore.selectedFarmId,
       money,
     });
+
+    if (res) {
+      setMoney(money);
+      setHarvestModalOpen(true);
+    }
     handleCloseMenu();
   };
 
@@ -146,6 +162,11 @@ const Farms = observer(() => {
   return (
     <>
       <StyledFarmGrid>{gridItems}</StyledFarmGrid>
+      <HarvestModal
+        open={harvestModalOpen}
+        onClose={() => setHarvestModalOpen(false)}
+        money={money}
+      />
       <Menu
         open={contextMenu !== null}
         onClose={handleCloseMenu}

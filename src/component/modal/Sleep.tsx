@@ -27,7 +27,7 @@ const SleepModal = (props: SleepModalProps) => {
     if (open) {
       setTimeout(() => {
         handleClose();
-      }, 2500);
+      }, 2000);
     }
   }, [open]);
 
