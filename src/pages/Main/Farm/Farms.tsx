@@ -104,9 +104,10 @@ const Farms = observer(() => {
                 src={tile}
                 style={{
                   position: 'absolute',
-                  top: 0,
-                  width: '160px',
-                  height: '160px',
+                  top: '40px',
+                  left: '40px',
+                  width: '80px',
+                  height: '80px',
                   objectFit: 'contain',
                 }}
               />
