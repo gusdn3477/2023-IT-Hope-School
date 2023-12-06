@@ -232,14 +232,20 @@ class WebRequestHandler(BaseHTTPRequestHandler):
                 ]  # id확인해주세요
 
             data = json.dumps(
-                account_data[json_data["id"]],
+                account_data,
                 indent=4,
                 sort_keys=True,
                 ensure_ascii=False,
             )
+            
             file = open("account.json", "w")
             file.write(data)
-            self.wfile.write(data.encode("UTF-8"))
+
+            response = account_data[json_data["id"]]
+            response_json = json.dumps(
+                response, indent=4, sort_keys=True, ensure_ascii=False
+            )
+            self.wfile.write(response_json.encode("UTF-8"))
 
             file.close()
 

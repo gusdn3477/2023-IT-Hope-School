@@ -1,7 +1,32 @@
 {
     "123": {
-        "bag": {},
-        "day": 0,
+        "bag": {
+            "0": {
+                "count": 13,
+                "id": "0",
+                "price": 50,
+                "term": 1
+            },
+            "2": {
+                "count": 2,
+                "id": "2",
+                "price": 100,
+                "term": 2
+            },
+            "3": {
+                "count": 1,
+                "id": "3",
+                "price": 1000,
+                "term": 3
+            },
+            "4": {
+                "count": 3,
+                "id": "4",
+                "price": 500,
+                "term": 3
+            }
+        },
+        "day": 8,
         "farm": {
             "0": {
                 "id": "0"
@@ -34,7 +59,12 @@
                 "id": "3"
             },
             "4": {
-                "id": "4"
+                "id": "4",
+                "item": {
+                    "complete": true,
+                    "day": 8,
+                    "itemId": "3"
+                }
             },
             "5": {
                 "id": "5"
@@ -54,9 +84,10 @@
         },
         "gender": "female",
         "id": "123",
-        "money": 10000,
+        "money": 6689,
         "nick": "123",
         "password": "123",
-        "regiDate": "2023-12-05T14:30:26.235Z"
+        "regiDate": "2023-12-06T05:44:52.859Z",
+        "success": true
     }
 }

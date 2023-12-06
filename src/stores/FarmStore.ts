@@ -11,7 +11,7 @@ class FarmStore {
   async sleep({ id }) {
     try {
       const res = await farmRepository.sleep({ id });
-      userStore.user = res.data;
+      userStore.user = toJS(res.data);
       return res.data.farm;
     } catch (e) {
       console.log(e);
@@ -29,6 +29,24 @@ class FarmStore {
   }) {
     try {
       const res = await farmRepository.plant({ id, farmId, itemId });
+      userStore.user = toJS(res.data);
+      return res.data.farm;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async harvest({
+    id,
+    farmId,
+    money,
+  }: {
+    id: string;
+    farmId: string;
+    money: number;
+  }) {
+    try {
+      const res = await farmRepository.harvest({ id, farmId, money });
       userStore.user = toJS(res.data);
       return res.data.farm;
     } catch (e) {

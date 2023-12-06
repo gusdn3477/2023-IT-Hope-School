@@ -9,6 +9,8 @@ import ground from '../../../assets/ground.png';
 import { useStore } from '../../../hooks/useStore';
 import { items as marketItems } from '../../../constants/items';
 import { observer } from 'mobx-react-lite';
+import { toJS } from 'mobx';
+import { farmStore } from '../../../stores/FarmStore';
 
 const StyledFarmGrid = styled.div`
   display: grid;
@@ -40,6 +42,7 @@ const Farms = observer(() => {
 
   const { userStore, uiStore } = useStore();
 
+  console.log('context', contextMenu);
   const handleClickItem = (
     event: React.MouseEvent<HTMLElement>,
     farmId: string,
@@ -48,14 +51,10 @@ const Farms = observer(() => {
     const targetTileInfo = userStore.user?.farm[id];
 
     if (targetTileInfo)
-      setContextMenu(
-        contextMenu === null
-          ? {
-              mouseX: event.clientX + 2,
-              mouseY: event.clientY - 6,
-            }
-          : null,
-      );
+      setContextMenu({
+        mouseX: event.clientX + 2,
+        mouseY: event.clientY - 6,
+      });
     uiStore.setSelectedFarmId(farmId);
   };
 
@@ -69,8 +68,33 @@ const Farms = observer(() => {
     handleCloseMenu();
   };
 
-  const handleClickHarvest = () => {
-    console.log('handleClickHarvest');
+  const handleClickHarvest = async () => {
+    const targetTileInfo = userStore.user?.farm[uiStore.selectedFarmId].item;
+    let count = 0;
+    let price = 0;
+    if (targetTileInfo.itemId === '0') {
+      count = Math.floor(Math.random() * 3) + 3;
+      price = (15 + 20) / 2;
+    } else if (targetTileInfo.itemId === '1') {
+      count = Math.floor(Math.random() * 3) + 3;
+      price = (15 + 25) / 2;
+    } else if (targetTileInfo.itemId === '2') {
+      count = Math.floor(Math.random() * 2) + 1;
+      price = (45 + 60) / 2;
+    } else if (targetTileInfo.itemId === '3') {
+      count = 3;
+      price = 400;
+    } else {
+      count = Math.floor(Math.random() * 3) + 3;
+      price = (150 + 200) / 2;
+    }
+
+    const money = Math.round(count * price);
+    await farmStore.harvest({
+      id: userStore.user.id,
+      farmId: uiStore.selectedFarmId,
+      money,
+    });
     handleCloseMenu();
   };
 
