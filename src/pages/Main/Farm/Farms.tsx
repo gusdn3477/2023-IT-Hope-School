@@ -24,7 +24,6 @@ const StyledGridItem = styled.div<{ $tile?: string }>`
   height: 160px;
   border: 0.5px solid #d6b469;
   box-sizing: border-box;
-  cursor: pointer;
   ${({ $tile }) =>
     $tile &&
     css`
@@ -97,7 +96,7 @@ const Farms = observer(() => {
           <div
             onClick={(e) => handleClickItem(e, `${i * 4 + j}`)}
             key={`${i * 4 + j}`}
-            style={{ position: 'relative' }}
+            style={{ position: 'relative', cursor: 'pointer' }}
           >
             <StyledGridItem $tile={ground}></StyledGridItem>
             {tile !== '' && (
@@ -132,7 +131,7 @@ const Farms = observer(() => {
             : undefined
         }
       >
-        {userStore.user?.farm?.farmId?.item === undefined && (
+        {userStore.user?.farm[uiStore.selectedFarmId]?.item === undefined && (
           <MenuItem
             onClick={handleClickPlant}
             style={{ fontFamily: 'Neo둥근모' }}
@@ -140,12 +139,19 @@ const Farms = observer(() => {
             {'심기'}
           </MenuItem>
         )}
-        {userStore.user?.farm?.farmId?.item?.complete === true && (
+        {userStore.user?.farm[uiStore.selectedFarmId]?.item?.complete ===
+          true && (
           <MenuItem
             onClick={handleClickHarvest}
             style={{ fontFamily: 'Neo둥근모' }}
           >
             {'수확하기'}
+          </MenuItem>
+        )}
+        {userStore.user?.farm[uiStore.selectedFarmId]?.item?.complete ===
+          false && (
+          <MenuItem disabled style={{ fontFamily: 'Neo둥근모' }}>
+            {'성장 중'}
           </MenuItem>
         )}
       </Menu>

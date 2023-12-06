@@ -253,7 +253,10 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             account_data = json.load(file)
             file.close()
 
-            del account_data[json_data["id"]]["bag"][json_data["itemId"]]
+            if account_data[json_data["id"]]["bag"][json_data["itemId"]]["count"] == 1:
+                del account_data[json_data["id"]]["bag"][json_data["itemId"]]
+            else:
+                account_data[json_data["id"]]["bag"][json_data["itemId"]]["count"] = account_data[json_data["id"]]["bag"][json_data["itemId"]]["count"] - 1
             account_data[json_data["id"]]["farm"][json_data["farmId"]]["item"] = {
                 "complete": False,
                 "day": 0,
