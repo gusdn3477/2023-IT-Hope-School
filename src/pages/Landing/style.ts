@@ -19,7 +19,7 @@ export const ButtonWrapper = styled.div`
   align-items: center;
   flex-direction: column;
   & img {
-    margin-top: 35px;
+    margin-top: 15px;
   }
 `;
 

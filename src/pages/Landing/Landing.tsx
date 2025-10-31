@@ -30,7 +30,7 @@ export const Landing = observer(() => {
           alignItems: 'center',
         }}
       >
-        <div style={{ marginTop: '50px' }}>
+        <div>
           <img
             src={gameLogo}
             className="logo"
@@ -41,7 +41,7 @@ export const Landing = observer(() => {
             }}
           />
         </div>
-        <h1 style={{ color: 'white' }}>IT 희망농장</h1>
+        <h1 style={{ color: 'white', margin: '10px 0px' }}>IT 희망농장</h1>
         <S.ButtonWrapper>
           {userStore.isLogin ? (
             <>
