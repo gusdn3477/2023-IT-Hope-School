@@ -9,7 +9,6 @@ import ground from '../../../assets/ground.png';
 import { useStore } from '../../../hooks/useStore';
 import { items as marketItems } from '../../../constants/items';
 import { observer } from 'mobx-react-lite';
-import { toJS } from 'mobx';
 import { farmStore } from '../../../stores/FarmStore';
 import HarvestModal from '../../../component/modal/Harvest';
 
