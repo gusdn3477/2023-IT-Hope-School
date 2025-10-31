@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import background from '../../assets/farm_image.jpg';
+import background from '../../assets/sea.png';
 
 export const LandingWrapper = styled.div`
   width: 100%;
@@ -19,12 +19,12 @@ export const ButtonWrapper = styled.div`
   align-items: center;
   flex-direction: column;
   & img {
-    margin-top: 15px;
+    margin-top: 35px;
   }
 `;
 
 export const StyledButton = styled.button`
   width: 240px;
-  height: 80px;
+  height: 90px;
   cursor: pointer;
 `;

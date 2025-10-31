@@ -119,7 +119,6 @@ const Farms = observer(() => {
 
   const initializeGridItems = () => {
     const items = [];
-    const count = 0;
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         let tile = '';

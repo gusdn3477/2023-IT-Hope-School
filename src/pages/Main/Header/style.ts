@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import background from '../../../assets/gamebg.png';
+import background from '../../../assets/sea.png';
 
 export const StyledHeader = styled.div`
   display: flex;

@@ -19,7 +19,6 @@ import BedtimeIcon from '@mui/icons-material/Bedtime';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import mainmenu from '../../../assets/mainmenu.png';
 
 export const Header = observer(() => {
   const [marketOpen, setMarketOpen] = useState(false);
@@ -36,8 +35,7 @@ export const Header = observer(() => {
     <>
       <StyledHeader>
         <div style={{ display: 'flex' }}>
-          <img src={mainmenu} style={{ width: '72px' }} />
-          <img src={gameLogo} style={{ width: '96px', marginLeft: '12px' }} />
+          <img src={gameLogo} style={{ width: '96px', marginLeft: '6px' }} />
         </div>
         <div style={{ display: 'flex' }}>
           <HeaderTitleWrapper>
