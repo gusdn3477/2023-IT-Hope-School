@@ -12,7 +12,8 @@ export const StyledHeader = styled.div`
 
 export const OutletWrapper = styled.div`
   width: 100%;
-  height: calc(100% - 72px);
+  /* Header(72px) + InfoStrip(32px) accounted for to maintain visual vertical centering */
+  height: calc(100% - 72px - 32px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,4 +36,16 @@ export const HeaderTitleWrapper = styled('div')`
   & strong {
     margin-right: 8px;
   }
+`;
+
+export const InfoStrip = styled('div')`
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  color: white;
+  font-size: 12px;
+  gap: 12px;
 `;

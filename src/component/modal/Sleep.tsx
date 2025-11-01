@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import goodnight from '../../assets/goodnight.png';
 
@@ -10,8 +10,8 @@ export interface SleepModalProps {
 
 const StyledDialog = styled(Dialog)`
   & .MuiDialog-paper {
-    width: 600px;
-    max-width: none;
+    width: min(720px, 90vw);
+    max-width: 90vw;
     overflow-y: hidden;
   }
 `;
@@ -19,17 +19,17 @@ const StyledDialog = styled(Dialog)`
 const SleepModal = (props: SleepModalProps) => {
   const { open, onClose } = props;
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
-  };
+  }, [onClose]);
 
   useEffect(() => {
-    if (open) {
-      setTimeout(() => {
-        handleClose();
-      }, 2000);
-    }
-  }, [open]);
+    if (!open) return;
+    const t = setTimeout(() => {
+      handleClose();
+    }, 2000);
+    return () => clearTimeout(t);
+  }, [open, handleClose]);
 
   return (
     <StyledDialog onClose={handleClose} open={open} disableScrollLock>
@@ -43,7 +43,7 @@ const SleepModal = (props: SleepModalProps) => {
         Good Night
       </DialogTitle>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <img src={goodnight} style={{ width: '600px' }} />
+        <img src={goodnight} style={{ width: '100%', maxWidth: '720px', height: 'auto' }} />
       </div>
     </StyledDialog>
   );

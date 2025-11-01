@@ -3,23 +3,24 @@ import styled from 'styled-components';
 import { StyledButton } from './style';
 import CloseIcon from '@mui/icons-material/Close';
 
-export interface HarvestModalProps {
+export interface ResultModalProps {
   open: boolean;
   onClose: () => void;
-  money: number;
+  title: string;
+  message: string;
 }
 
 const StyledDialog = styled(Dialog)`
   & .MuiDialog-paper {
-    width: 600px;
-    height: 200px;
+    width: 760px;
+    height: 280px;
     max-width: none;
     overflow-y: hidden;
   }
 `;
 
-const HarvestModal = (props: HarvestModalProps) => {
-  const { open, onClose, money } = props;
+const ResultModal = (props: ResultModalProps) => {
+  const { open, onClose, title, message } = props;
 
   const handleClose = () => {
     onClose();
@@ -30,12 +31,12 @@ const HarvestModal = (props: HarvestModalProps) => {
       <DialogTitle
         style={{
           textAlign: 'center',
-          fontSize: '32px',
+          fontSize: '36px',
           fontFamily: 'Neo둥근모',
         }}
       >
-        <strong>축하합니다.</strong>
-        <br /> {money}원을 얻었습니다!
+        <strong>{title}</strong>
+        <br /> {message}
       </DialogTitle>
       <IconButton
         aria-label="close"
@@ -61,4 +62,4 @@ const HarvestModal = (props: HarvestModalProps) => {
   );
 };
 
-export default HarvestModal;
+export default ResultModal;
