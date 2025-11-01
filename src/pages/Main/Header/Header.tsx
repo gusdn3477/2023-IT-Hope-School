@@ -3,11 +3,13 @@ import { ItemsModal } from '../../../component/modal/Items';
 import { HeaderTitleWrapper, OutletWrapper, StyledButtonWrapper, StyledHeader, InfoStrip } from './style';
 import { Outlet } from 'react-router-dom';
 import gameLogo from '../../../assets/logo2.png';
+import { MenuPopover } from '../../../component/popover/Menu';
 import { Button, Menu, MenuItem } from '@mui/material';
 import coin from '../../../assets/coin.png';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../hooks/useStore';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
+import MenuIcon from '@mui/icons-material/Menu';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { FishdexModal } from '../../../component/modal/Fishdex';
 import SellFishModal from '../../../component/modal/SellFish';
@@ -17,6 +19,7 @@ import { fishingStore } from '../../../stores/FishingStore';
 import { FISH_LIST, getSeasonFromDay } from '../../../constants/fish';
 
 export const Header = observer(() => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [fishdexOpen, setFishdexOpen] = useState(false);
   const [fishMenuAnchorEl, setFishMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [sellOpen, setSellOpen] = useState(false);
@@ -68,7 +71,13 @@ export const Header = observer(() => {
               미끼 상점{' '}
               <LocalGroceryStoreIcon style={{ width: '20px', height: '20px' }} />
             </Button>
-            {/* 우측 투명 버튼 이슈 방지를 위해 '메뉴' 버튼 제거 */}
+            <Button
+              variant="contained"
+              onClick={(e) => setAnchorEl(e.currentTarget)}
+              style={{ fontFamily: 'Neo둥근모' }}
+            >
+              메뉴 <MenuIcon style={{ width: '20px', height: '20px' }} />
+            </Button>
           </StyledButtonWrapper>
         </div>
       </StyledHeader>
@@ -92,16 +101,6 @@ export const Header = observer(() => {
         );
       })()}
       <Menu anchorEl={fishMenuAnchorEl} open={Boolean(fishMenuAnchorEl)} onClose={() => setFishMenuAnchorEl(null)}>
-        <MenuItem
-          onClick={() => {
-            // 낚시 모달로 바로 플레이: 쿼리 파라미터로 신호
-            window.history.replaceState(null, '', '/main?playModal=1');
-            setFishMenuAnchorEl(null);
-          }}
-          style={{ fontFamily: 'Neo둥근모' }}
-        >
-          모달로 플레이
-        </MenuItem>
         <MenuItem
           onClick={() => {
             setSellOpen(true);
@@ -131,6 +130,7 @@ export const Header = observer(() => {
           낚시터 확장
         </MenuItem>
       </Menu>
+      <MenuPopover anchorEl={anchorEl} handleClose={() => setAnchorEl(null)} />
       <ItemsModal
         open={uiStore.openItemModal}
         onClose={() => {

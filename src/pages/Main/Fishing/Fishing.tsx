@@ -61,8 +61,9 @@ const Fishing = observer(() => {
   const [successZoneDirection, setSuccessZoneDirection] = useState(1);
   const rodSpec = getRodSpec();
   const baitSpec = getBaitSpec();
-  // Balance pass: slightly harder early game, still scales with gear
-  const successZoneWidth = Math.min(240, 40 + (rodSpec + baitSpec) * 2.2);
+  // Balance pass: success zone narrows with difficulty, widens with gear (gentle scaling)
+  const baseZoneWidth = Math.min(240, 40 + (rodSpec + baitSpec) * 2.2);
+  const successZoneWidth = Math.max(30, baseZoneWidth - fishLevel * 3.2);
   const markerSpeed = Math.max(1, 2 + fishLevel * 0.35 - 0.02 * (rodSpec + baitSpec));
   const successZoneSpeed = Math.max(1, 4 + fishLevel * 0.15 - 0.01 * (rodSpec + baitSpec));
 
@@ -186,10 +187,11 @@ const Fishing = observer(() => {
           const gain = 1.4 + 0.10 * (rodSpec + baitSpec);
           setFightProgress((p) => Math.min(100, p + gain));
         } else {
-          // Softer decay: target ~5-8 per second in early game
-          const base = 0.35; // per 50ms tick
-          const calc = base + fishLevel * 0.03 - 0.03 * (rodSpec + baitSpec);
-          const decay = Math.max(0.15, calc);
+          // Decay scales with difficulty but stays gentle and gear-mitigated
+          // per 50ms tick: base ~0.25 (≈5/sec), +0.02/level (≈0.4/sec), -0.02/gear (≈0.4/sec)
+          const base = 0.25;
+          const calc = base + fishLevel * 0.02 - 0.02 * (rodSpec + baitSpec);
+          const decay = Math.min(0.6, Math.max(0.12, calc));
           setFightProgress((p) => Math.max(0, p - decay));
         }
 
@@ -289,7 +291,10 @@ const Fishing = observer(() => {
               </div>
             )}
 
-            {gameState === 'waiting' && <div>...기다리는 중...</div>}
+            {gameState === 'waiting' && <div style={{
+              color:'white',
+              fontSize: '24px'
+            }}>...기다리는 중...</div>}
 
             {gameState === 'hooking' && <BiteIndicator>!</BiteIndicator>}
 
@@ -302,7 +307,10 @@ const Fishing = observer(() => {
                 <FightProgressContainer>
                   <FightProgressBar progress={fightProgress} />
                 </FightProgressContainer>
-                <div>Spacebar를 연타해서 노란색을 초록색 영역에 맞추세요!</div>
+                <div style={{
+                  color:'white'
+                  ,fontSize: '24px'
+                }}>Spacebar를 연타해서 노란색을 초록색 영역에 맞추세요!</div>
               </>
             )}
             </GameInner>
@@ -315,11 +323,6 @@ const Fishing = observer(() => {
             {!modalOpen && (
               <>
                 {buildGameView(false)}
-                <div style={{ marginTop: 8 }}>
-                  <Button variant="outlined" onClick={() => setModalOpen(true)}>
-                    모달로 플레이
-                  </Button>
-                </div>
               </>
             )}
             {/* Modal play */}
