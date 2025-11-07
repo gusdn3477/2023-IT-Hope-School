@@ -5,8 +5,16 @@ class FishingRepository {
   return API.post('/rod/upgrade', { playerId });
   }
 
-  doFishing(playerId: string, baitId: string) {
-  return API.post('/fishing', { playerId, baitId });
+  doFishing(playerId: string, baitId: string, score?: number) {
+    return API.post('/fishing', { playerId, baitId, score });
+  }
+
+  startEncounter(playerId: string, baitId: string) {
+    return API.post('/fishing/encounter', { playerId, baitId });
+  }
+
+  resolveEncounter(playerId: string, encounterId: string, score: number) {
+    return API.post('/fishing/resolve', { playerId, encounterId, score });
   }
 
   buyBait(playerId: string, baitId: string, quantity: number) {

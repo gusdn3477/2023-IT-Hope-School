@@ -19,6 +19,7 @@ class FishingStore {
   baitInventory: Record<string, number> = {};
   fishBag: Record<string, number> = {}; // fishId -> count
   caughtFish: FishDexEntry[] = []; // fish dex
+  dexSeenCount: number = 0; // number of fish discovered (fishList==1)
 
   constructor() {
     makeAutoObservable(this);
@@ -51,11 +52,11 @@ class FishingStore {
     this.selectedBaitId = id;
   }
 
-  async doFishing() {
+  async doFishing(score?: number) {
     try {
       const id = userStore.user?.id;
       if (!id) return;
-      const res = await fishingRepository.doFishing(id, this.selectedBaitId);
+      const res = await fishingRepository.doFishing(id, this.selectedBaitId, score);
       await this.loadInventory();
       if (res.data.success) uiStore.pushNotification('success', res.data.message);
       else uiStore.pushNotification('error', res.data.message);
@@ -63,6 +64,37 @@ class FishingStore {
     } catch (e) {
       console.error(e);
       uiStore.pushNotification('error', '낚시 중 오류');
+    }
+  }
+
+  async startEncounter() {
+    try {
+      const id = userStore.user?.id;
+      if (!id) return;
+      const res = await fishingRepository.startEncounter(id, this.selectedBaitId);
+      if (res.data.success) {
+        uiStore.pushNotification('info', `${res.data.fish?.name ?? '???'} 등장!`);
+      } else {
+        uiStore.pushNotification('error', res.data.message);
+      }
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      uiStore.pushNotification('error', '조우 시작 오류');
+    }
+  }
+
+  async resolveEncounter(encounterId: string, score: number) {
+    try {
+      const id = userStore.user?.id;
+      if (!id) return;
+      const res = await fishingRepository.resolveEncounter(id, encounterId, score);
+      await this.loadInventory();
+      uiStore.pushNotification(res.data.success ? 'success' : 'error', res.data.message);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      uiStore.pushNotification('error', '조우 확정 오류');
     }
   }
 
@@ -119,7 +151,9 @@ class FishingStore {
       if (res.data?.success) {
         runInAction(() => {
           // 백엔드 구조: { success: true, fish_data: [...] }
-          this.caughtFish = res.data.fish_data ?? [];
+          const list = res.data.fish_data ?? [];
+          this.caughtFish = list;
+          this.dexSeenCount = list.filter((f: FishDexEntry) => !!f.caught).length;
         });
       } else {
         console.warn("Failed to load encyclopedia", res.data);

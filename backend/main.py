@@ -68,8 +68,30 @@ class FishingHandler(BaseHTTPRequestHandler):
         elif path == "/fishing":
             playerId = body.get("playerId") or body.get("player_id")
             baitId = body.get("baitId") or body.get("bait_id")
-            result = fishing.attempt_fishing(playerId, baitId)
+            score = body.get("score") or body.get("performanceScore")
+            result = fishing.attempt_fishing(playerId, baitId, score)
             self._send_json(result)
+
+        # 조우 시작 (물고기 미리 확정)
+        elif path == "/fishing/encounter":
+            playerId = body.get("playerId") or body.get("player_id")
+            baitId = body.get("baitId") or body.get("bait_id")
+            if not playerId:
+                self._send_json({"success": False, "message": "playerId is required"}, status=400)
+            else:
+                result = fishing.start_encounter(playerId, baitId)
+                self._send_json(result)
+
+        # 조우 확정 (미니게임 점수 전달)
+        elif path == "/fishing/resolve":
+            playerId = body.get("playerId") or body.get("player_id")
+            encounterId = body.get("encounterId")
+            score = body.get("score") or body.get("performanceScore")
+            if not playerId or not encounterId:
+                self._send_json({"success": False, "message": "playerId and encounterId are required"}, status=400)
+            else:
+                result = fishing.resolve_encounter(playerId, encounterId, score)
+                self._send_json(result)
 
         # 미끼 구매
         elif path == "/bait/buy":

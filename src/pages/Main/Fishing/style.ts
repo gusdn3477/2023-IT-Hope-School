@@ -69,6 +69,22 @@ export const Marker = styled.div<{ position: number }>`
   left: ${({ position }) => position}px;
 `;
 
+export const TargetZone = styled.div<{ position: number; width: number }>`
+  width: ${({ width }) => width}px;
+  height: 100%;
+  background-color: #2196f3; /* blue */
+  position: absolute;
+  left: ${({ position }) => position}px;
+`;
+
+export const CursorZone = styled.div<{ position: number; width: number }>`
+  width: ${({ width }) => width}px;
+  height: 100%;
+  background-color: #ffeb3b; /* yellow */
+  position: absolute;
+  left: ${({ position }) => position}px;
+`;
+
 export const FightProgressContainer = styled.div`
   width: 300px;
   height: 20px;

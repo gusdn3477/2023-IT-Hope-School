@@ -10,11 +10,15 @@ def get_player_fish_data(playerId):
 
     fish_data = []
     counts = player.get("fishCounts", [])
+    seen_list = player.get("fishList", [])
     for fish_id, fish_info in fish_list.items():
         caught = False
         idx = int(fish_id) - 1
-        if 0 <= idx < len(counts) and counts[idx] > 0:
-            caught = True
+        # 우선순위: fishList의 1 여부로 판정 (도감 '발견' 기준), 없으면 fishCounts>0로 폴백
+        if 0 <= idx < len(seen_list):
+            caught = bool(seen_list[idx] == 1)
+        elif 0 <= idx < len(counts):
+            caught = bool(counts[idx] > 0)
         fish_data.append({
             "id": fish_id,
             "name": fish_info["name"],

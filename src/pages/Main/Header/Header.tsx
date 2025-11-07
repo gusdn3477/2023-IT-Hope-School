@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HeaderTitleWrapper, OutletWrapper, StyledButtonWrapper, StyledHeader, InfoStrip } from './style';
 import { Outlet } from 'react-router-dom';
 import gameLogo from '../../../assets/logo2.png';
@@ -26,6 +26,17 @@ export const Header = observer(() => {
   const [rodOpen, setRodOpen] = useState(false);
   const [baitOpen, setBaitOpen] = useState(false);
   const { userStore } = useStore();
+
+  // 도감 진행도는 백엔드의 fishList(= discovered) 기준
+  useEffect(() => {
+    // 로그인 후 또는 첫 렌더링 시 한 번 로드
+    if (userStore.user?.id) {
+      // 이미 로드되어 있으면 생략
+      if (fishingStore.caughtFish.length === 0) {
+        fishingStore.getEncyclopedia();
+      }
+    }
+  }, [userStore.user?.id]);
 
   return (
     <>
@@ -83,7 +94,7 @@ export const Header = observer(() => {
           })()}
         </span>
         <span>|</span>
-        <span>낚시터 {fishingStore.groundLevel} / 도감 {fishingStore.caughtFish.length}/{Object.keys(FISH).length}</span>
+  <span>낚시터 {fishingStore.groundLevel} / 도감 {fishingStore.dexSeenCount}/{Object.keys(FISH).length}</span>
       </InfoStrip>
       <Menu anchorEl={fishMenuAnchorEl} open={Boolean(fishMenuAnchorEl)} onClose={() => setFishMenuAnchorEl(null)}>
         <MenuItem
