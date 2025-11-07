@@ -41,13 +41,11 @@ const StyledTextField = styled(TextField)`
 export const BaitShopModal = observer(({ open, onClose }: BaitShopProps) => {
   const [counts, setCounts] = useState<Record<string, number>>({});
 
-  const handleBuy = () => {
-    let anyPurchased = false;
-    for (const bait of BAITS) {
-      const count = counts[bait.id] ?? 0;
+  const handleBuy = async () => {
+    for (const baitId in counts) {
+      const count = counts[baitId];
       if (count > 0) {
-        const ok = fishingStore.buyBait(bait.id, count, bait.price);
-        anyPurchased = anyPurchased || ok;
+        await fishingStore.buyBait(baitId, count);
       }
     }
     setCounts({});
@@ -73,18 +71,18 @@ export const BaitShopModal = observer(({ open, onClose }: BaitShopProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {BAITS.map((b) => (
-            <TableRow key={b.id}>
+          {Object.entries(BAITS).map(([id, b]) => (
+            <TableRow key={id}>
               <StyledCell align="center">{b.name}</StyledCell>
-              <StyledCell align="center">+{b.effect}</StyledCell>
+              <StyledCell align="center">+{b.catch_rate_bonus}</StyledCell>
               <StyledCell align="center">{b.price}원</StyledCell>
-              <StyledCell align="center">{fishingStore.baitInventory[b.id] ?? 0}</StyledCell>
+              <StyledCell align="center">{fishingStore.baitInventory[id] ?? 0}</StyledCell>
               <StyledCell align="center">
                 <StyledTextField
                   type="number"
                   inputProps={{ min: 0 }}
-                  value={counts[b.id] ?? 0}
-                  onChange={(e) => setCounts({ ...counts, [b.id]: Math.max(0, Number(e.target.value)) })}
+                  value={counts[id] ?? 0}
+                  onChange={(e) => setCounts({ ...counts, [id]: Math.max(0, Number(e.target.value)) })}
                 />
               </StyledCell>
             </TableRow>

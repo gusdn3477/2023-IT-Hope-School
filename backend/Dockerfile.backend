@@ -1,0 +1,12 @@
+# Dockerfile.backend
+
+# 1. Python 기반 이미지 사용
+FROM python:3.9-slim
+
+# 2. 필요한 파일 복사 (현재 디렉토리 기준)
+WORKDIR /app
+COPY . /app
+
+# 3. Simple HTTP 서버 실행
+EXPOSE 8081
+CMD ["python3", "main.py", "8081"]

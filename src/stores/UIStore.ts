@@ -5,6 +5,8 @@ class UIStore {
   _selectedFarmId = '';
   _openMarketModal = false;
   _openItemModal = false;
+  notifications: { id: number; type: 'success' | 'error' | 'info'; message: string; createdAt: number }[] = [];
+  _nextId = 1;
 
   constructor() {
     makeAutoObservable(this);
@@ -40,6 +42,20 @@ class UIStore {
 
   get openItemModal() {
     return this._openItemModal;
+  }
+
+  pushNotification(type: 'success' | 'error' | 'info', message: string) {
+    const n = { id: this._nextId++, type, message, createdAt: Date.now() };
+    this.notifications.push(n);
+    setTimeout(() => this.removeNotification(n.id), 4000);
+  }
+
+  removeNotification(id: number) {
+    this.notifications = this.notifications.filter(n => n.id !== id);
+  }
+
+  clearNotifications() {
+    this.notifications = [];
   }
 }
 

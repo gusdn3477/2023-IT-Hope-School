@@ -1,0 +1,31 @@
+{
+  "1":  { "name": "붕어",     "level": 1, "price": 10000,  "rate": 0.8 },
+  "2":  { "name": "잉어",     "level": 1, "price": 10000,  "rate": 0.8 },
+  "3":  { "name": "금붕어",   "level": 1, "price": 10000,  "rate": 0.8 },
+  "4":  { "name": "피라미",   "level": 1, "price": 10000,  "rate": 0.8 },
+  "5":  { "name": "블루길",   "level": 1, "price": 10000,  "rate": 0.8 },
+
+  "6":  { "name": "송어",     "level": 2, "price": 20000,  "rate": 0.6 },
+  "7":  { "name": "메기",     "level": 2, "price": 20000,  "rate": 0.6 },
+  "8":  { "name": "강준치",   "level": 2, "price": 20000,  "rate": 0.6 },
+  "9":  { "name": "쏘가리",   "level": 2, "price": 20000,  "rate": 0.6 },
+  "10": { "name": "연어",     "level": 2, "price": 20000,  "rate": 0.6 },
+
+  "11": { "name": "농어",     "level": 3, "price": 40000,  "rate": 0.4 },
+  "12": { "name": "고등어",   "level": 3, "price": 40000,  "rate": 0.4 },
+  "13": { "name": "돔",       "level": 3, "price": 40000,  "rate": 0.4 },
+  "14": { "name": "틸라피아", "level": 3, "price": 40000,  "rate": 0.4 },
+  "15": { "name": "대구",     "level": 3, "price": 40000,  "rate": 0.4 },
+
+  "16": { "name": "광어",     "level": 4, "price": 60000,  "rate": 0.2 },
+  "17": { "name": "삼치",     "level": 4, "price": 60000,  "rate": 0.2 },
+  "18": { "name": "방어",     "level": 4, "price": 60000,  "rate": 0.2 },
+  "19": { "name": "참돔",     "level": 4, "price": 60000,  "rate": 0.2 },
+  "20": { "name": "민어",     "level": 4, "price": 60000,  "rate": 0.2 },
+
+  "21": { "name": "참치",     "level": 5, "price": 100000, "rate": 0.1 },
+  "22": { "name": "청새치",   "level": 5, "price": 100000, "rate": 0.1 },
+  "23": { "name": "황새치",   "level": 5, "price": 100000, "rate": 0.1 },
+  "24": { "name": "철갑상어", "level": 5, "price": 100000, "rate": 0.1 },
+  "25": { "name": "자이언트 트레발리", "level": 5, "price": 100000, "rate": 0.1 }
+}

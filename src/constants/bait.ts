@@ -1,12 +1,27 @@
-export interface Bait {
-  id: string;
-  name: string;
-  effect: number; // adds to control/marker movement or widens success zone
-  price: number;
+export const BAITS: Record<string, { name: string; catch_rate_bonus: number; price: number }> = {
+  '1': {
+    name: '쓰레기 미끼',
+    catch_rate_bonus: 0.13,
+    price: 1000
+  },
+  '2': {
+    name: '일반 미끼',
+    catch_rate_bonus: 0.20,
+    price: 3000
+  },
+  '3': {
+    name: '희귀 미끼',
+    catch_rate_bonus: 0.30,
+    price: 10000
+  },
+  '4': {
+    name: '전설 미끼',
+    catch_rate_bonus: 0.40,
+    price: 20000
+  },
+  '5': {
+    name: '신화 미끼',
+    catch_rate_bonus: 0.50,
+    price: 50000
+  }
 }
-
-export const BAITS: Bait[] = [
-  { id: 'basic', name: '기본 미끼', effect: 2, price: 20 },
-  { id: 'silver', name: '은빛 미끼', effect: 4, price: 60 },
-  { id: 'gold', name: '황금 미끼', effect: 6, price: 120 },
-];

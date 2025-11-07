@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ItemsModal } from '../../../component/modal/Items';
 import { HeaderTitleWrapper, OutletWrapper, StyledButtonWrapper, StyledHeader, InfoStrip } from './style';
 import { Outlet } from 'react-router-dom';
 import gameLogo from '../../../assets/logo2.png';
@@ -16,7 +15,8 @@ import SellFishModal from '../../../component/modal/SellFish';
 import RodUpgradeModal from '../../../component/modal/RodUpgrade';
 import BaitShopModal from '../../../component/modal/BaitShop';
 import { fishingStore } from '../../../stores/FishingStore';
-import { FISH_LIST, getSeasonFromDay } from '../../../constants/fish';
+import { FISH } from '../../../constants/fish';
+import { BAITS } from '../../../constants/bait';
 
 export const Header = observer(() => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -25,7 +25,7 @@ export const Header = observer(() => {
   const [sellOpen, setSellOpen] = useState(false);
   const [rodOpen, setRodOpen] = useState(false);
   const [baitOpen, setBaitOpen] = useState(false);
-  const { uiStore, userStore } = useStore();
+  const { userStore } = useStore();
 
   return (
     <>
@@ -35,18 +35,10 @@ export const Header = observer(() => {
         </div>
         <div style={{ display: 'flex' }}>
           <HeaderTitleWrapper>
-            {(() => {
-              const us = userStore as unknown as { user?: { day?: number; money?: number } };
-              const money = us.user?.money ?? 0;
-              return (
-                <>
-                  <strong style={{ display: 'flex', alignItems: 'center' }}>
-                    <img src={coin} width={24} height={24} />
-                    <strong>{money}원</strong>
-                  </strong>
-                </>
-              );
-            })()}
+            <strong style={{ display: 'flex', alignItems: 'center' }}>
+              <img src={coin} width={24} height={24} />
+              <strong>{userStore.user?.money ?? 0}원</strong>
+            </strong>
           </HeaderTitleWrapper>
           <StyledButtonWrapper>
             <Button
@@ -81,25 +73,18 @@ export const Header = observer(() => {
           </StyledButtonWrapper>
         </div>
       </StyledHeader>
-      {(() => {
-        const us = userStore as unknown as { user?: { day?: number } };
-        const day = us.user?.day ?? 1;
-        const season = getSeasonFromDay(day);
-        const baitName = fishingStore.selectedBait.name;
-        const baitCount = fishingStore.baitInventory[fishingStore.selectedBaitId] ?? 0;
-        const dex = `${fishingStore.caughtFish.length}/${FISH_LIST.length}`;
-        return (
-          <InfoStrip>
-            <span>계절: {season}</span>
-            <span>|</span>
-            <span>낚싯대 Lv {fishingStore.rodLevel}</span>
-            <span>|</span>
-            <span>미끼: {baitName} ({baitCount})</span>
-            <span>|</span>
-            <span>낚시터 {fishingStore.groundLevel} / 도감 {dex}</span>
-          </InfoStrip>
-        );
-      })()}
+      <InfoStrip>
+        <span>낚싯대 Lv {fishingStore.rodLevel}</span>
+        <span>|</span>
+        <span>
+          {(() => {
+            const bait = BAITS[fishingStore.selectedBaitId as keyof typeof BAITS];
+            return `미끼: ${bait?.name ?? '없음'} (${fishingStore.baitInventory?.[fishingStore.selectedBaitId] ?? 0})`;
+          })()}
+        </span>
+        <span>|</span>
+        <span>낚시터 {fishingStore.groundLevel} / 도감 {fishingStore.caughtFish.length}/{Object.keys(FISH).length}</span>
+      </InfoStrip>
       <Menu anchorEl={fishMenuAnchorEl} open={Boolean(fishMenuAnchorEl)} onClose={() => setFishMenuAnchorEl(null)}>
         <MenuItem
           onClick={() => {
@@ -121,23 +106,15 @@ export const Header = observer(() => {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            fishingStore.expand(FISH_LIST.length);
+            fishingStore.unlock();
             setFishMenuAnchorEl(null);
           }}
-          disabled={!fishingStore.canExpand(FISH_LIST.length)}
           style={{ fontFamily: 'Neo둥근모' }}
         >
           낚시터 확장
         </MenuItem>
       </Menu>
       <MenuPopover anchorEl={anchorEl} handleClose={() => setAnchorEl(null)} />
-      <ItemsModal
-        open={uiStore.openItemModal}
-        onClose={() => {
-          uiStore.setOpenItemModal(false);
-          uiStore.setSelectedFarmId('');
-        }}
-      />
       <FishdexModal open={fishdexOpen} onClose={() => setFishdexOpen(false)} />
       <SellFishModal open={sellOpen} onClose={() => setSellOpen(false)} />
       <RodUpgradeModal open={rodOpen} onClose={() => setRodOpen(false)} />

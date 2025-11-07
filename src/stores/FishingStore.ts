@@ -1,107 +1,145 @@
-import { makeAutoObservable } from 'mobx';
-import type { Fish } from '../constants/fish';
-import { BAITS } from '../constants/bait';
+import { makeAutoObservable, runInAction } from 'mobx';
+import { fishingRepository } from '../repository/FishingRepository';
 import { userStore } from './UserStore';
+import { uiStore } from './UIStore';
+
+export interface FishDexEntry {
+  id: string;
+  name: string;
+  level: number;
+  price: number;
+  rate: number;
+  caught: boolean;
+}
 
 class FishingStore {
   rodLevel = 1;
   groundLevel = 1; // unlocked fishing area tier
-  selectedBaitId: string = 'basic';
-  baitInventory: Record<string, number> = { basic: 5 };
+  selectedBaitId: string = '1';
+  baitInventory: Record<string, number> = {};
   fishBag: Record<string, number> = {}; // fishId -> count
-  caughtFish: string[] = []; // fish dex
+  caughtFish: FishDexEntry[] = []; // fish dex
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  get selectedBait() {
-    return BAITS.find((b) => b.id === this.selectedBaitId) ?? BAITS[0];
+  async loadInventory() {
+    try {
+      const id = userStore.user?.id;
+      if (!id) return;
+      const res = await fishingRepository.getInventory(id);
+      if (res.data.success) {
+        runInAction(() => {
+          this.rodLevel = res.data.inventory.rodLevel;
+          this.baitInventory = res.data.inventory.baitInventory;
+          const fishBag: Record<string, number> = {};
+          for (const fish of res.data.inventory.caughtFish as Array<{ fishId: number; count: number }>) {
+            fishBag[String(fish.fishId)] = fish.count;
+          }
+          this.fishBag = fishBag;
+          const sites = res.data.inventory.unlockedSites as number[] | undefined;
+          this.groundLevel = Array.isArray(sites) ? sites.length : 1;
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   setSelectedBait(id: string) {
     this.selectedBaitId = id;
   }
 
-  addBait(id: string, count: number) {
-    this.baitInventory[id] = (this.baitInventory[id] ?? 0) + count;
-  }
-
-  useBait(id: string) {
-    if ((this.baitInventory[id] ?? 0) > 0) {
-      this.baitInventory[id] -= 1;
-      return true;
+  async doFishing() {
+    try {
+      const id = userStore.user?.id;
+      if (!id) return;
+      const res = await fishingRepository.doFishing(id, this.selectedBaitId);
+      await this.loadInventory();
+      if (res.data.success) uiStore.pushNotification('success', res.data.message);
+      else uiStore.pushNotification('error', res.data.message);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      uiStore.pushNotification('error', '낚시 중 오류');
     }
-    return false;
   }
 
-  catchFish(fish: Fish) {
-    // Add to bag
-    this.fishBag[fish.id] = (this.fishBag[fish.id] ?? 0) + 1;
-    // Update dex
-    if (!this.caughtFish.includes(fish.id)) this.caughtFish.push(fish.id);
-  }
-
-  sellFish(items: { fishId: string; price: number; count: number }[]) {
-    let total = 0;
-    for (const it of items) {
-      const have = this.fishBag[it.fishId] ?? 0;
-      const sellCount = Math.min(have, it.count);
-      if (sellCount <= 0) continue;
-      this.fishBag[it.fishId] = have - sellCount;
-      total += sellCount * it.price;
+  async sellFish(fishId: string, quantity: number) {
+    try {
+      const id = userStore.user?.id;
+      if (!id) return;
+      const res = await fishingRepository.sellFish(id, fishId, quantity);
+      await userStore.loadUser();
+      await this.loadInventory();
+      uiStore.pushNotification(res.data.success ? 'success' : 'error', res.data.message);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      uiStore.pushNotification('error', '판매 중 오류');
     }
-    // Add to user money if available
-    const us = userStore as unknown as { user?: { money?: number } };
-    if (us.user && typeof us.user.money === 'number') {
-      us.user.money += total;
+  }
+
+  async buyBait(baitId: string, quantity: number) {
+    try {
+      const id = userStore.user?.id;
+      if (!id) return;
+      const res = await fishingRepository.buyBait(id, baitId, quantity);
+      await userStore.loadUser();
+      await this.loadInventory();
+      uiStore.pushNotification(res.data.success ? 'success' : 'error', res.data.message);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      uiStore.pushNotification('error', '미끼 구매 오류');
     }
-    return total;
   }
 
-  buyBait(baitId: string, count: number, pricePerUnit: number) {
-    const cost = count * pricePerUnit;
-    const us = userStore as unknown as { user?: { money?: number } };
-    const money: number = (us.user?.money ?? 0) as number;
-    if (count <= 0) return false;
-    if (money < cost) return false;
-    if (us.user && typeof us.user.money === 'number') {
-      us.user.money -= cost;
+  async upgradeRod() {
+    try {
+      const id = userStore.user?.id;
+      if (!id) return;
+      const res = await fishingRepository.upgradeRod(id);
+      await userStore.loadUser();
+      await this.loadInventory();
+      uiStore.pushNotification(res.data.success ? 'success' : 'error', res.data.message);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      uiStore.pushNotification('error', '강화 오류');
     }
-    this.addBait(baitId, count);
-    return true;
   }
 
-  upgradeRod() {
-    const cost = this.getUpgradeCost();
-    const us = userStore as unknown as { user?: { money?: number } };
-    const money: number = (us.user?.money ?? 0) as number;
-    if (money < cost) return false;
-    if (us.user && typeof us.user.money === 'number') {
-      us.user.money -= cost;
+  async getEncyclopedia() {
+    try {
+      const id = userStore.user?.id;
+      if (!id) return;
+      const res = await fishingRepository.getEncyclopedia(id);
+      if (res.data?.success) {
+        runInAction(() => {
+          // 백엔드 구조: { success: true, fish_data: [...] }
+          this.caughtFish = res.data.fish_data ?? [];
+        });
+      } else {
+        console.warn("Failed to load encyclopedia", res.data);
+      }
+    } catch (e) {
+      console.error(e);
     }
-    this.rodLevel += 1;
-    return true;
   }
 
-  getUpgradeCost() {
-    return this.rodLevel * 200; // simple scaling
-  }
-
-  get dexCompletion() {
-    // computed elsewhere with total list; here only caught length available
-    return this.caughtFish.length;
-  }
-
-  canExpand(totalFishCount: number) {
-    // Unlock next ground every 25% dex completion
-    const ratio = totalFishCount === 0 ? 0 : this.caughtFish.length / totalFishCount;
-    const required = this.groundLevel * 0.25; // 25%, 50%, 75%, ...
-    return ratio >= required;
-  }
-
-  expand(totalFishCount: number) {
-    if (this.canExpand(totalFishCount)) this.groundLevel += 1;
+  async unlock() {
+    try {
+      const id = userStore.user?.id;
+      if (!id) return;
+      const res = await fishingRepository.unlock(id);
+      await this.loadInventory();
+      uiStore.pushNotification(res?.data?.success ? 'success' : 'error', res?.data?.message || '낚시터 확장');
+    } catch (e) {
+      console.error(e);
+      uiStore.pushNotification('error', '낚시터 확장 오류');
+    }
   }
 }
 

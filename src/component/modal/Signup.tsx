@@ -10,14 +10,6 @@ import {
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../hooks/useStore';
 import { useState } from 'react';
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-} from '@mui/material';
-import styled from 'styled-components';
 
 interface SignupModalProps {
   open: boolean;
@@ -30,15 +22,12 @@ export const SignupModal = observer(
     const [nick, setNick] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [gender, setGender] = useState('female');
 
     const signup = async () => {
       const res = await userStore.signup({
         id,
         password,
-        regiDate: new Date(),
         nick,
-        gender,
       });
 
       if (res) handleClose();
@@ -59,6 +48,7 @@ export const SignupModal = observer(
             fullWidth
             onChange={(e) => setId(e.target.value)}
             variant="standard"
+            value={id}
           />
           <StyledTextField
             margin="dense"
@@ -76,6 +66,7 @@ export const SignupModal = observer(
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
             variant="standard"
+            value={password}
           />
           <StyledTextField
             margin="dense"
@@ -85,31 +76,8 @@ export const SignupModal = observer(
             onChange={(e) => setConfirmPassword(e.target.value)}
             fullWidth
             variant="standard"
+            value={confirmPassword}
           />
-          <FormControl>
-            <FormLabel
-              id="demo-radio-buttons-group-label"
-              style={{ fontFamily: 'Neo둥근모' }}
-            >
-              성별
-            </FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="female"
-              name="radio-buttons-group"
-            >
-              <StyledFormControlLabel
-                value="female"
-                control={<Radio onClick={() => setGender('female')} />}
-                label="여성"
-              />
-              <StyledFormControlLabel
-                value="male"
-                control={<Radio onClick={() => setGender('male')} />}
-                label="남성"
-              />
-            </RadioGroup>
-          </FormControl>
         </DialogContent>
         <StyledDialogActions>
           <StyledButton variant="contained" onClick={signup}>
@@ -123,9 +91,3 @@ export const SignupModal = observer(
     );
   },
 );
-
-const StyledFormControlLabel = styled(FormControlLabel)`
-  span {
-    font-family: 'Neo둥근모';
-  }
-`;

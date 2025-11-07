@@ -13,7 +13,7 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import { FISH_LIST } from '../../constants/fish';
+import { FISH } from '../../constants/fish';
 import { fishingStore } from '../../stores/FishingStore';
 import { useState } from 'react';
 
@@ -38,16 +38,27 @@ const StyledTextField = styled(TextField)`
 export const SellFishModal = observer(({ open, onClose }: SellFishProps) => {
   const [counts, setCounts] = useState<Record<string, number>>({});
 
-  const rows = FISH_LIST.filter((f) => (fishingStore.fishBag[f.id] ?? 0) > 0);
+  const rows = Object.entries(fishingStore.fishBag)
+    .map(([fishId, count]) => ({
+      id: fishId,
+      name: FISH[fishId]?.name,
+      price: FISH[fishId]?.price,
+      count,
+    }))
+    .filter(row => row.count > 0);
 
   const total = rows.reduce((acc, f) => {
-    const c = Math.min(fishingStore.fishBag[f.id] ?? 0, counts[f.id] ?? 0);
-    return acc + c * f.price;
+    const c = Math.min(f.count ?? 0, counts[f.id] ?? 0);
+    return acc + c * (f.price ?? 0);
   }, 0);
 
-  const handleSell = () => {
-    const items = rows.map((f) => ({ fishId: f.id, price: f.price, count: counts[f.id] ?? 0 }));
-    fishingStore.sellFish(items);
+  const handleSell = async () => {
+    for (const fishId in counts) {
+      const count = counts[fishId];
+      if (count > 0) {
+        await fishingStore.sellFish(fishId, count);
+      }
+    }
     setCounts({});
     onClose();
   };
@@ -74,13 +85,13 @@ export const SellFishModal = observer(({ open, onClose }: SellFishProps) => {
             <TableRow key={f.id}>
               <StyledCell align="center">{f.name}</StyledCell>
               <StyledCell align="center">{f.price}원</StyledCell>
-              <StyledCell align="center">{fishingStore.fishBag[f.id]}</StyledCell>
+              <StyledCell align="center">{f.count}</StyledCell>
               <StyledCell align="center">
                 <StyledTextField
                   type="number"
-                  inputProps={{ min: 0, max: fishingStore.fishBag[f.id] }}
+                  inputProps={{ min: 0, max: f.count }}
                   value={counts[f.id] ?? 0}
-                  onChange={(e) => setCounts({ ...counts, [f.id]: Math.max(0, Math.min(Number(e.target.value), fishingStore.fishBag[f.id])) })}
+                  onChange={(e) => setCounts({ ...counts, [f.id]: Math.max(0, Math.min(Number(e.target.value), f.count)) })}
                 />
               </StyledCell>
             </TableRow>

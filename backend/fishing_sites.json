@@ -1,0 +1,13 @@
+{
+  "1": {
+    "name": "초보자 낚시터",
+    "description": "기본 낚시터",
+    "required_level": 1
+    },
+  "2": {
+    "name": "고급 낚시터",
+    "description": "희귀 물고기가 많은 해변",
+    "required_level": 3
+
+    }
+}

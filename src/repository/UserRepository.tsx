@@ -4,21 +4,21 @@ class UserRepository {
   signUp({
     id,
     password,
-    regiDate,
     nick,
-    gender,
   }: {
     id: string;
     password: string;
-    regiDate: string;
     nick: string;
-    gender: string;
   }) {
-    return API.post('/signup', { id, password, regiDate, nick, gender });
+  return API.post('/signup', { playerId: id, password, nickname: nick });
   }
 
   login({ id, password }: { id: string; password: string }) {
-    return API.post('/login', { id, password });
+  return API.post('/login', { playerId: id, password });
+  }
+
+  getUser(id: string) {
+  return API.post('/user', { playerId: id });
   }
 }
 
