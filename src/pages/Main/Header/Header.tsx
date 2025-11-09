@@ -68,6 +68,14 @@ export const Header = observer(() => {
     setSearchParams(next);
   };
 
+  // Open a modal from the drawer: set modal AND remove drawer atomically to avoid param races
+  const openFromDrawer = (modal: string) => {
+    const next = new URLSearchParams(searchParams.toString());
+    next.set('modal', modal);
+    next.delete('drawer');
+    setSearchParams(next);
+  };
+
   return (
     <>
       <StyledHeader>
@@ -177,22 +185,22 @@ export const Header = observer(() => {
       <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawer(false)} disableScrollLock>
         <div style={{ width: 260 }}>
           <List>
-            <ListItem button onClick={() => { setModal('fishdex'); setDrawer(false); }}>
+            <ListItem button onClick={() => openFromDrawer('fishdex')}>
               <ListItemText primary="도감" />
             </ListItem>
-            <ListItem button onClick={() => { setModal('leaderboard'); setDrawer(false); }}>
+            <ListItem button onClick={() => openFromDrawer('leaderboard')}>
               <ListItemText primary="리더보드" />
             </ListItem>
-            <ListItem button onClick={() => { setModal('bait-shop'); setDrawer(false); }}>
+            <ListItem button onClick={() => openFromDrawer('bait-shop')}>
               <ListItemText primary="미끼 상점" />
             </ListItem>
-            <ListItem button onClick={() => { setModal('transfer'); setDrawer(false); }}>
+            <ListItem button onClick={() => openFromDrawer('transfer')}>
               <ListItemText primary="송금" />
             </ListItem>
-            <ListItem button onClick={() => { setModal('sell'); setDrawer(false); }}>
+            <ListItem button onClick={() => openFromDrawer('sell')}>
               <ListItemText primary="판매" />
             </ListItem>
-            <ListItem button onClick={() => { setModal('rod-upgrade'); setDrawer(false); }}>
+            <ListItem button onClick={() => openFromDrawer('rod-upgrade')}>
               <ListItemText primary="낚싯대 강화" />
             </ListItem>
             <ListItem button onClick={() => { userStore.logout(); setDrawer(false); }}>
