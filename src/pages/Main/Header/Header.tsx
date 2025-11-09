@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { HeaderTitleWrapper, OutletWrapper, StyledButtonWrapper, StyledHeader, InfoStrip } from './style';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useSearchParams } from 'react-router-dom';
 import gameLogo from '../../../assets/IT_HOPE_FISHING.png';
 import { MenuPopover } from '../../../component/popover/Menu';
 import { Button, Menu, MenuItem, Drawer, List, ListItem, ListItemText, IconButton, useMediaQuery } from '@mui/material';
@@ -23,14 +23,10 @@ import { BAITS } from '../../../constants/bait';
 
 export const Header = observer(() => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [fishdexOpen, setFishdexOpen] = useState(false);
+  // URL 기반 모달 상태 관리 (query param: ?modal=<name>)
+  const [searchParams, setSearchParams] = useSearchParams();
   const [fishMenuAnchorEl, setFishMenuAnchorEl] = useState<null | HTMLElement>(null);
-  const [sellOpen, setSellOpen] = useState(false);
-  const [rodOpen, setRodOpen] = useState(false);
-  const [baitOpen, setBaitOpen] = useState(false);
-  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
-  const [transferOpen, setTransferOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  // Drawer 상태도 URL로 관리 (?drawer=main)
   const { userStore } = useStore();
   const isMobile = useMediaQuery('(max-width:640px)');
 
@@ -44,6 +40,33 @@ export const Header = observer(() => {
       }
     }
   }, [userStore.user?.id]);
+
+  // helper: 모달 param 설정
+  const setModal = (modal?: string) => {
+    const next = new URLSearchParams(searchParams.toString());
+    if (modal) {
+      next.set('modal', modal);
+    } else {
+      next.delete('modal');
+    }
+    setSearchParams(next);
+  };
+
+  const activeModal = searchParams.get('modal');
+  const fishdexOpen = activeModal === 'fishdex';
+  const sellOpen = activeModal === 'sell';
+  const rodOpen = activeModal === 'rod-upgrade';
+  const baitOpen = activeModal === 'bait-shop';
+  const leaderboardOpen = activeModal === 'leaderboard';
+  const transferOpen = activeModal === 'transfer';
+
+  const drawerOpen = searchParams.get('drawer') === 'main';
+  const setDrawer = (open: boolean) => {
+    const next = new URLSearchParams(searchParams.toString());
+    if (open) next.set('drawer', 'main');
+    else next.delete('drawer');
+    setSearchParams(next);
+  };
 
   return (
     <>
@@ -69,21 +92,21 @@ export const Header = observer(() => {
               </Button>
               <Button
                 variant="contained"
-                onClick={() => setFishdexOpen(true)}
+                onClick={() => setModal('fishdex')}
                 style={{ fontFamily: 'Neo둥근모' }}
               >
                 도감 <LibraryBooksIcon style={{ width: '20px', height: '20px' }} />
               </Button>
               <Button
                 variant="contained"
-                onClick={() => setLeaderboardOpen(true)}
+                onClick={() => setModal('leaderboard')}
                 style={{ fontFamily: 'Neo둥근모' }}
               >
                 리더보드 <LeaderboardIcon style={{ width: '20px', height: '20px' }} />
               </Button>
               <Button
                 variant="contained"
-                onClick={() => setBaitOpen(true)}
+                onClick={() => setModal('bait-shop')}
                 style={{ fontFamily: 'Neo둥근모' }}
               >
                 미끼 상점{' '}
@@ -91,7 +114,7 @@ export const Header = observer(() => {
               </Button>
               <Button
                 variant="contained"
-                onClick={() => setTransferOpen(true)}
+                onClick={() => setModal('transfer')}
                 style={{ fontFamily: 'Neo둥근모' }}
               >
                 송금
@@ -106,7 +129,10 @@ export const Header = observer(() => {
             </StyledButtonWrapper>
           ) : (
             <div>
-              <IconButton color="inherit" onClick={() => setMobileOpen(true)}>
+              <IconButton
+                onClick={() => setDrawer(true)}
+                sx={{ color: '#fff', background: 'rgba(255,255,255,0.15)', '&:hover': { background: 'rgba(255,255,255,0.3)' } }}
+              >
                 <MenuIcon />
               </IconButton>
             </div>
@@ -128,7 +154,7 @@ export const Header = observer(() => {
       <Menu anchorEl={fishMenuAnchorEl} open={Boolean(fishMenuAnchorEl)} onClose={() => setFishMenuAnchorEl(null)}>
         <MenuItem
           onClick={() => {
-            setSellOpen(true);
+            setModal('sell');
             setFishMenuAnchorEl(null);
           }}
           style={{ fontFamily: 'Neo둥근모' }}
@@ -137,7 +163,7 @@ export const Header = observer(() => {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            setRodOpen(true);
+            setModal('rod-upgrade');
             setFishMenuAnchorEl(null);
           }}
           style={{ fontFamily: 'Neo둥근모' }}
@@ -148,39 +174,39 @@ export const Header = observer(() => {
       </Menu>
       <MenuPopover anchorEl={anchorEl} handleClose={() => setAnchorEl(null)} />
       {/* 모바일 햄버거 메뉴 */}
-      <Drawer anchor="right" open={mobileOpen} onClose={() => setMobileOpen(false)} disableScrollLock>
+      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawer(false)} disableScrollLock>
         <div style={{ width: 260 }}>
           <List>
-            <ListItem button onClick={() => { setFishdexOpen(true); setMobileOpen(false); }}>
+            <ListItem button onClick={() => { setModal('fishdex'); setDrawer(false); }}>
               <ListItemText primary="도감" />
             </ListItem>
-            <ListItem button onClick={() => { setLeaderboardOpen(true); setMobileOpen(false); }}>
+            <ListItem button onClick={() => { setModal('leaderboard'); setDrawer(false); }}>
               <ListItemText primary="리더보드" />
             </ListItem>
-            <ListItem button onClick={() => { setBaitOpen(true); setMobileOpen(false); }}>
+            <ListItem button onClick={() => { setModal('bait-shop'); setDrawer(false); }}>
               <ListItemText primary="미끼 상점" />
             </ListItem>
-            <ListItem button onClick={() => { setTransferOpen(true); setMobileOpen(false); }}>
+            <ListItem button onClick={() => { setModal('transfer'); setDrawer(false); }}>
               <ListItemText primary="송금" />
             </ListItem>
-            <ListItem button onClick={() => { setSellOpen(true); setMobileOpen(false); }}>
+            <ListItem button onClick={() => { setModal('sell'); setDrawer(false); }}>
               <ListItemText primary="판매" />
             </ListItem>
-            <ListItem button onClick={() => { setRodOpen(true); setMobileOpen(false); }}>
+            <ListItem button onClick={() => { setModal('rod-upgrade'); setDrawer(false); }}>
               <ListItemText primary="낚싯대 강화" />
             </ListItem>
-            <ListItem button onClick={() => { userStore.logout(); setMobileOpen(false); }}>
+            <ListItem button onClick={() => { userStore.logout(); setDrawer(false); }}>
               <ListItemText primary="로그아웃" />
             </ListItem>
           </List>
         </div>
       </Drawer>
-      <FishdexModal open={fishdexOpen} onClose={() => setFishdexOpen(false)} />
-      <SellFishModal open={sellOpen} onClose={() => setSellOpen(false)} />
-      <RodUpgradeModal open={rodOpen} onClose={() => setRodOpen(false)} />
-      <BaitShopModal open={baitOpen} onClose={() => setBaitOpen(false)} />
-  <LeaderboardModal open={leaderboardOpen} onClose={() => setLeaderboardOpen(false)} />
-  <TransferModal open={transferOpen} onClose={() => setTransferOpen(false)} />
+    <FishdexModal open={fishdexOpen} onClose={() => setModal(undefined)} />
+    <SellFishModal open={sellOpen} onClose={() => setModal(undefined)} />
+    <RodUpgradeModal open={rodOpen} onClose={() => setModal(undefined)} />
+    <BaitShopModal open={baitOpen} onClose={() => setModal(undefined)} />
+    <LeaderboardModal open={leaderboardOpen} onClose={() => setModal(undefined)} />
+    <TransferModal open={transferOpen} onClose={() => setModal(undefined)} />
       <OutletWrapper>
         <Outlet />
       </OutletWrapper>

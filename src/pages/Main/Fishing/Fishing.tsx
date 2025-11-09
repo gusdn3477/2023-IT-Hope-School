@@ -89,6 +89,13 @@ const Fishing = observer(() => {
 
   const startFishing = async () => {
     if (loading || hooking) return;
+    // 미끼 보유 검사: 선택된 미끼 수량 0이면 안내 후 종료
+    const selected = fishingStore.selectedBaitId;
+    const have = fishingStore.baitInventory[selected] ?? 0;
+    if (have <= 0) {
+      uiStore.pushNotification('error', '미끼가 없습니다. 미끼를 넣어주세요!');
+      return;
+    }
     // Step 1: show 3s cinematic (reuse intro video)
     setHooking(true);
     setHookPhase('video');
