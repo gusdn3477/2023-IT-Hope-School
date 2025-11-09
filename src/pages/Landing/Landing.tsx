@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import gameLogo from '../../assets/IT_HOPE_FISHING.png';
 import * as S from './style';
 import { observer } from 'mobx-react-lite';
@@ -17,9 +17,60 @@ export const Landing = observer(() => {
 
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [signupModalOpen, setSignupModalOpen] = useState(false);
+  const [introDone, setIntroDone] = useState(false);
+  const [overlayClosing, setOverlayClosing] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    if (introDone) return;
+    // If video ends or errors, close automatically
+    const v = videoRef.current;
+    if (v) {
+      const onEnd = () => startClosing();
+      const onError = () => startClosing();
+      v.addEventListener('ended', onEnd);
+      v.addEventListener('error', onError);
+      // Fallback timeout in case video can't auto-play silently
+      const fallback = setTimeout(() => startClosing(), 10000);
+      return () => {
+        v.removeEventListener('ended', onEnd);
+        v.removeEventListener('error', onError);
+        clearTimeout(fallback);
+      };
+    } else {
+      const t = setTimeout(() => startClosing(), 4000);
+      return () => clearTimeout(t);
+    }
+  }, [introDone]);
+
+  const startClosing = () => {
+    setOverlayClosing(true);
+    setTimeout(() => {
+      setIntroDone(true);
+      setLoginModalOpen(true);
+    }, 450);
+  };
 
   return (
     <S.LandingWrapper>
+      {!introDone && (
+        <S.IntroOverlay closing={overlayClosing} onClick={startClosing}>
+          <S.IntroBox>
+            <S.IntroVideo
+              ref={videoRef}
+              src="/intro.mp4"
+              autoPlay
+              muted
+              playsInline
+              onLoadedMetadata={() => {
+                // Try play programmatically in case browser blocks autoPlay without user gesture
+                videoRef.current?.play().catch(() => {/* ignore */});
+              }}
+            />
+            <S.IntroHint>클릭하거나 영상 종료 후 시작합니다...</S.IntroHint>
+          </S.IntroBox>
+        </S.IntroOverlay>
+      )}
       <div
         style={{
           height: '100%',
@@ -30,15 +81,19 @@ export const Landing = observer(() => {
           alignItems: 'center',
         }}
       >
-        <div>
-          <img
-            src={gameLogo}
-            className="logo"
-            alt="logo"
-            width={350}
-            height={350}
-          />
+        <div style={{ marginTop: introDone ? '0' : '40px', transition: 'margin-top 600ms ease' }}>
+          {introDone && (
+            <img
+              src={gameLogo}
+              className="logo"
+              alt="logo"
+              width={350}
+              height={350}
+              style={{ filter: 'drop-shadow(0 0 6px rgba(255,255,255,0.4))' }}
+            />
+          )}
         </div>
+        <S.ButtonsFadeContainer show={introDone}>
         <S.ButtonWrapper>
           {userStore.isLogin ? (
             <>
@@ -85,6 +140,7 @@ export const Landing = observer(() => {
             </>
           )}
         </S.ButtonWrapper>
+        </S.ButtonsFadeContainer>
       </div>
     </S.LandingWrapper>
   );

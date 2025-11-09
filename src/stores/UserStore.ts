@@ -16,6 +16,12 @@ interface UserData {
 class UserStore {
   isLogin = false;
   user: UserData | null = null;
+  leaderboardAll: { rank: number; playerId: string; nickname: string; level: number; rodLevel: number; dexCount: number; money: number }[] = [];
+  leaderboardWeekly: { rank: number; playerId: string; nickname: string; weeklyFishCaught: number; weeklyMoneyEarned: number; level: number; rodLevel: number; dexCount: number; money: number }[] = [];
+  leaderboardLoading = false; // shared loading state for current fetch
+  leaderboardError: string | null = null;
+  transferLoading = false;
+  userSearchResults: { playerId: string; nickname: string; level: number; rodLevel: number }[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -101,6 +107,94 @@ class UserStore {
       }
       // 도감은 FishingStore에서 관리 (필요 시 외부에서 fishingStore.getEncyclopedia 호출)
     }
+  }
+
+  async loadLeaderboard(limit: number = 100, mode: 'all' | 'weekly' = 'all') {
+    this.leaderboardLoading = true;
+    this.leaderboardError = null;
+    try {
+      const res = await userRepository.getLeaderboard(limit, mode);
+      if (res.data.success) {
+        if (mode === 'weekly') {
+          this.leaderboardWeekly = res.data.entries || [];
+        } else {
+          this.leaderboardAll = res.data.entries || [];
+        }
+      } else {
+        this.leaderboardError = res.data.message || '리더보드 로드 실패';
+        uiStore.pushNotification('error', this.leaderboardError ?? '리더보드 로드 실패');
+      }
+    } catch (e) {
+      console.error(e);
+      this.leaderboardError = '리더보드 오류';
+      uiStore.pushNotification('error', this.leaderboardError ?? '리더보드 오류');
+    } finally {
+      this.leaderboardLoading = false;
+    }
+  }
+
+  async transferMoney(toPlayerId: string, amount: number) {
+    if (!this.user) return false;
+    this.transferLoading = true;
+    try {
+      const res = await userRepository.sendTransfer({ fromPlayerId: this.user.id, toPlayerId, type: 'money', amount });
+      if (res.data.success) {
+        uiStore.pushNotification('success', res.data.message || '송금 성공');
+        await this.loadUser();
+        return true;
+      } else {
+        uiStore.pushNotification('error', res.data.message || '송금 실패');
+        return false;
+      }
+    } catch (e) {
+      console.error(e);
+      uiStore.pushNotification('error', '송금 오류');
+      return false;
+    } finally {
+      this.transferLoading = false;
+    }
+  }
+
+  async transferFish(toPlayerId: string, fishId: number, quantity: number) {
+    if (!this.user) return false;
+    this.transferLoading = true;
+    try {
+      const res = await userRepository.sendTransfer({ fromPlayerId: this.user.id, toPlayerId, type: 'fish', fishId, quantity });
+      if (res.data.success) {
+        uiStore.pushNotification('success', res.data.message || '물고기 송금 성공');
+        await this.loadUser();
+        // 인벤토리 재로드로 fishBag 반영
+        await (await import('./FishingStore')).fishingStore.loadInventory();
+        return true;
+      } else {
+        uiStore.pushNotification('error', res.data.message || '물고기 송금 실패');
+        return false;
+      }
+    } catch (e) {
+      console.error(e);
+      uiStore.pushNotification('error', '물고기 송금 오류');
+      return false;
+    } finally {
+      this.transferLoading = false;
+    }
+  }
+
+  async searchUsers(query: string) {
+    try {
+      const res = await userRepository.searchUsers(query);
+      if (res.data.success) {
+        this.userSearchResults = res.data.users || [];
+      } else {
+        this.userSearchResults = [];
+      }
+    } catch (e) {
+      console.error(e);
+      this.userSearchResults = [];
+    }
+  }
+
+  clearUserSearch() {
+    this.userSearchResults = [];
   }
 
   logout() {

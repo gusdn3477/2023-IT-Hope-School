@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Button } from '@mui/material';
 import sea from '../../../assets/sea.png';
@@ -16,8 +16,46 @@ const StyledTitle = styled.img`
   margin-bottom: 20px;
 `;
 
+const HookOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+`;
+
+const HookInner = styled.div`
+  position: relative;
+  width: min(800px, 88vw);
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+`;
+
+const HookVideo = styled.video`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const HookResultText = styled.div<{ success: boolean }>`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  font-weight: 900;
+  color: ${(p) => (p.success ? '#3CFF7A' : '#FF4D4F')};
+  text-shadow: 0 4px 16px rgba(0,0,0,0.7);
+  backdrop-filter: blur(1px);
+`;
+
 const Fishing = observer(() => {
-  const { fishingStore, userStore } = useStore();
+  const { fishingStore, userStore, uiStore } = useStore();
   const [resultModalOpen, setResultModalOpen] = useState(false);
   type FishingResult = { success: boolean; message?: string; fish?: { name?: string; price?: number } } | null;
   const [caughtFish, setCaughtFish] = useState<FishingResult>(null);
@@ -28,6 +66,19 @@ const Fishing = observer(() => {
   const [encounterFishName, setEncounterFishName] = useState<string>('물고기');
   const [encounterFishLevel, setEncounterFishLevel] = useState<number>(1);
 
+  // Hook cinematic + bite check
+  const [hooking, setHooking] = useState(false);
+  const [hookPhase, setHookPhase] = useState<null | 'video' | 'result'>(null);
+  const [hookSuccess, setHookSuccess] = useState<boolean | null>(null);
+
+  const hookChance = useMemo(() => {
+    // Simple heuristic: base 72% + rodLevel*3% + baitGrade*2%, clamped
+    const rodLevel = userStore.user?.rodLevel ?? 1;
+    const baitGrade = parseInt(fishingStore.selectedBaitId, 10) || 1;
+    const raw = 0.72 + (rodLevel - 1) * 0.03 + (baitGrade - 1) * 0.02;
+    return Math.min(0.94, Math.max(0.22, raw));
+  }, [userStore.user?.rodLevel, fishingStore.selectedBaitId]);
+
   useEffect(() => {
     const id = userStore.user?.id;
     if (id) {
@@ -37,14 +88,37 @@ const Fishing = observer(() => {
   }, [userStore.user?.id]);
 
   const startFishing = async () => {
-    // 서버에 조우 요청 -> 물고기 미리 공개
-    const res = await fishingStore.startEncounter();
-    if (res?.success) {
-      setEncounterId(res.encounterId);
-      setEncounterFishName(res.fish?.name ?? '물고기');
-      setEncounterFishLevel(res.fish?.level ?? 1);
-      setEncounterOpen(true);
-    }
+    if (loading || hooking) return;
+    // Step 1: show 3s cinematic (reuse intro video)
+    setHooking(true);
+    setHookPhase('video');
+    setHookSuccess(null);
+
+    // After ~3s, determine bite success/fail, show result briefly, then proceed
+    window.setTimeout(async () => {
+      const success = Math.random() < hookChance;
+      setHookSuccess(success);
+      setHookPhase('result');
+
+      // Show result text ~1s
+      window.setTimeout(async () => {
+        if (!success) {
+          setHooking(false);
+          uiStore.pushNotification('info', '물고기를 놓쳤습니다...');
+          return;
+        }
+        // Success: proceed to encounter as before
+        const res = await fishingStore.startEncounter();
+        if (res?.success) {
+          setEncounterId(res.encounterId);
+          setEncounterFishName(res.fish?.name ?? '물고기');
+          setEncounterFishLevel(res.fish?.level ?? 1);
+          setEncounterOpen(true);
+        }
+        setHooking(false);
+        setHookPhase(null);
+      }, 1000);
+    }, 3000);
   };
 
   const handleTimingComplete = async (score: number) => {
@@ -75,14 +149,14 @@ const Fishing = observer(() => {
   ): TimingMashConfig => {
     // 기본 파라미터 (더 어려움 쪽으로 상향)
   let durationMs = 7000; // 생존 요구 시간
-  let drainPerSec = 19;  // 기본 소모 (약간 증가)
+  let drainPerSec = 18;  // 기본 소모 (약간 완화)
   let regenPerHit = 5;   // 기본 회복 (겹침비율 * regen)
-  // 속도 분리: 파란(타겟)은 느리고 안정적, 노란(커서)은 빠르고 더 큰 폭으로 튐
-  let targetSpeed = 300;   // 이전보다 낮춰 조준 감
-  let cursorSpeed = 700;   // 커서 속도 크게 증가
-  let overlapThreshold = 0.59;
-  let targetWidth = 84;
-  let cursorWidth = 64;
+  // 속도 분리 유지하되 전반적으로 15~25% 감속
+  let targetSpeed = 250;   // 느린 패턴 (기존 300)
+  let cursorSpeed = 560;   // 빠르지만 과도하지 않게 (기존 700)
+  let overlapThreshold = 0.58; // 약간 완화
+  let targetWidth = 86;    // 소폭 넓힘으로 체감 난도 하향
+  let cursorWidth = 66;
 
     // 낚싯대가 높을수록 생존이 쉬워짐: 소모 감소 & 회복 증가 & 영역 약간 넓어짐
     const rodFactor = Math.max(0, rodLevel - 1); // 0 기반
@@ -98,9 +172,9 @@ const Fishing = observer(() => {
 
     // 물고기 레벨이 높을수록 난이도 상승: 속도/소모 크게, 영역 크게 축소, 정확도 강화
     const fishDiff = Math.max(0, fishLevel - 1);
-  drainPerSec += fishDiff * 3.2;
-  targetSpeed += fishDiff * 50;   // 상위 레벨에서도 느림 유지
-  cursorSpeed += fishDiff * 120;  // 상위 레벨일수록 훨씬 더 빨라짐
+  drainPerSec += fishDiff * 3.0;   // 소모 증가율 약간 낮춤
+  targetSpeed += fishDiff * 40;    // 레벨 보정 감속
+  cursorSpeed += fishDiff * 100;   // 상위 레벨 차이는 유지하되 전체 감속
     targetWidth -= fishDiff * 10; // 상위 레벨일수록 좁음
     cursorWidth -= fishDiff * 8;
     overlapThreshold += fishDiff * 0.03; // 더 정확해야 함
@@ -109,9 +183,9 @@ const Fishing = observer(() => {
 
     // 속도 차를 더 키우기 위한 약간의 무작위 편차 (매 시도마다 다르게 느껴지도록)
   const r = Math.random();
-  // 서로 다른 랜덤 분포 적용: 타겟은 미세 변동, 커서는 큰 변동
-  const targetScale = 0.92 + (r * 0.18);    // ~0.92~1.10 (미세)
-  const cursorScale = 1.05 + ((1 - r) * 0.45); // ~1.05~1.50 (크게)
+  // 감속 후 랜덤 범위도 약간 축소
+  const targetScale = 0.95 + (r * 0.12);      // ~0.95~1.07
+  const cursorScale = 1.02 + ((1 - r) * 0.30); // ~1.02~1.32
   targetSpeed *= targetScale;
   cursorSpeed *= cursorScale;
 
@@ -130,7 +204,7 @@ const Fishing = observer(() => {
   drainPerSec = Math.max(drainPerSec, requiredMinDrain);
 
   // 추가: 커서 속도가 너무 낮게 나오는 조합 방지 (최소 기준)
-  cursorSpeed = Math.max(cursorSpeed, targetSpeed * 1.75);
+  cursorSpeed = Math.max(cursorSpeed, targetSpeed * 1.6); // 최소 배율도 약간 낮춤
 
     // 최종 반환
     const cfg: TimingMashConfig = {
@@ -170,12 +244,34 @@ const Fishing = observer(() => {
           </div>
 
           <div style={{ display: 'flex', gap: 8, marginTop: '20px' }}>
-            <Button onClick={startFishing} variant="contained" color="primary" disabled={loading}>
-              {loading ? '낚시 중...' : '낚시하기'}
+            <Button onClick={startFishing} variant="contained" color="primary" disabled={loading || hooking}>
+              {hooking ? '캐스팅...' : loading ? '낚시 중...' : '낚시하기'}
             </Button>
           </div>
         </GameInner>
       </GameContainer>
+
+      {hooking && (
+        <HookOverlay>
+          <HookInner>
+            {/* Pre-roll cinematic */}
+            {hookPhase === 'video' && (
+              <HookVideo
+                src="/intro.mp4"
+                autoPlay
+                muted
+                playsInline
+                preload="auto"
+              />
+            )}
+            {hookPhase === 'result' && (
+              <HookResultText success={!!hookSuccess}>
+                {hookSuccess ? '성공!' : '놓쳤다!'}
+              </HookResultText>
+            )}
+          </HookInner>
+        </HookOverlay>
+      )}
 
       <ResultModal
         open={resultModalOpen}

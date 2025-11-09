@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HeaderTitleWrapper, OutletWrapper, StyledButtonWrapper, StyledHeader, InfoStrip } from './style';
 import { Outlet } from 'react-router-dom';
-import gameLogo from '../../../assets/logo2.png';
+import gameLogo from '../../../assets/IT_HOPE_FISHING.png';
 import { MenuPopover } from '../../../component/popover/Menu';
 import { Button, Menu, MenuItem } from '@mui/material';
 import coin from '../../../assets/coin.png';
@@ -10,9 +10,12 @@ import { useStore } from '../../../hooks/useStore';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import MenuIcon from '@mui/icons-material/Menu';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import LeaderboardIcon from '@mui/icons-material/EmojiEvents';
 import { FishdexModal } from '../../../component/modal/Fishdex';
 import SellFishModal from '../../../component/modal/SellFish';
 import RodUpgradeModal from '../../../component/modal/RodUpgrade';
+import LeaderboardModal from '../../../component/modal/Leaderboard';
+import TransferModal from '../../../component/modal/Transfer';
 import BaitShopModal from '../../../component/modal/BaitShop';
 import { fishingStore } from '../../../stores/FishingStore';
 import { FISH } from '../../../constants/fish';
@@ -25,6 +28,8 @@ export const Header = observer(() => {
   const [sellOpen, setSellOpen] = useState(false);
   const [rodOpen, setRodOpen] = useState(false);
   const [baitOpen, setBaitOpen] = useState(false);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
+  const [transferOpen, setTransferOpen] = useState(false);
   const { userStore } = useStore();
 
   // 도감 진행도는 백엔드의 fishList(= discovered) 기준
@@ -42,7 +47,7 @@ export const Header = observer(() => {
     <>
       <StyledHeader>
         <div style={{ display: 'flex' }}>
-          <img src={gameLogo} style={{ width: '96px', marginLeft: '6px' }} />
+          <img src={gameLogo} width={96} height={70}/>
         </div>
         <div style={{ display: 'flex' }}>
           <HeaderTitleWrapper>
@@ -68,11 +73,25 @@ export const Header = observer(() => {
             </Button>
             <Button
               variant="contained"
+              onClick={() => setLeaderboardOpen(true)}
+              style={{ fontFamily: 'Neo둥근모' }}
+            >
+              리더보드 <LeaderboardIcon style={{ width: '20px', height: '20px' }} />
+            </Button>
+            <Button
+              variant="contained"
               onClick={() => setBaitOpen(true)}
               style={{ fontFamily: 'Neo둥근모' }}
             >
               미끼 상점{' '}
               <LocalGroceryStoreIcon style={{ width: '20px', height: '20px' }} />
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setTransferOpen(true)}
+              style={{ fontFamily: 'Neo둥근모' }}
+            >
+              송금
             </Button>
             <Button
               variant="contained"
@@ -130,6 +149,8 @@ export const Header = observer(() => {
       <SellFishModal open={sellOpen} onClose={() => setSellOpen(false)} />
       <RodUpgradeModal open={rodOpen} onClose={() => setRodOpen(false)} />
       <BaitShopModal open={baitOpen} onClose={() => setBaitOpen(false)} />
+  <LeaderboardModal open={leaderboardOpen} onClose={() => setLeaderboardOpen(false)} />
+  <TransferModal open={transferOpen} onClose={() => setTransferOpen(false)} />
       <OutletWrapper>
         <Outlet />
       </OutletWrapper>

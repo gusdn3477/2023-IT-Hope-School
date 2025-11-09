@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from json_util.json_io import load_members, save_members
 
 def sell_fish(playerId, fishId, quantity):
@@ -25,6 +26,14 @@ def sell_fish(playerId, fishId, quantity):
     total = price * quantity
     player["fishCounts"][idx] -= quantity
     player["money"] += total
+
+    # 주간 통계 업데이트 (수익)
+    weekly = player.get("weekly") if isinstance(player.get("weekly"), dict) else {}
+    current_week = datetime.utcnow().strftime("%G-%V")
+    if weekly.get("weekId") != current_week:
+        weekly = {"weekId": current_week, "fishCaught": 0, "moneyEarned": 0}
+    weekly["moneyEarned"] = int(weekly.get("moneyEarned", 0)) + int(total)
+    player["weekly"] = weekly
 
     members[playerId] = player
     save_members(members)

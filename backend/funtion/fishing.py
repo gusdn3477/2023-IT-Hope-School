@@ -2,6 +2,7 @@ import json
 import random
 import uuid
 import time
+from datetime import datetime
 from json_util.json_io import load_members, save_members
 
 # 간단한 인메모리 조우 세션 저장 (서버 재시작 시 사라짐)
@@ -106,6 +107,14 @@ def resolve_encounter(playerId: str, encounterId: str | None, score: float | Non
     player["fishCounts"] = counts
     player["fishList"] = seen
 
+    # 주간 통계 업데이트
+    weekly = player.get("weekly") if isinstance(player.get("weekly"), dict) else {}
+    current_week = datetime.utcnow().strftime("%G-%V")
+    if weekly.get("weekId") != current_week:
+        weekly = {"weekId": current_week, "fishCaught": 0, "moneyEarned": 0}
+    weekly["fishCaught"] = int(weekly.get("fishCaught", 0)) + 1
+    player["weekly"] = weekly
+
     members[playerId] = player
     save_members(members)
     ENCOUNTERS.pop(encounterId, None)
@@ -185,6 +194,14 @@ def attempt_fishing(playerId, baitId=None, score: float | None = None):
 
     player["fishCounts"] = fish_counts
     player["fishList"] = fish_list
+
+    # 주간 통계 업데이트 (단일 시도 방식)
+    weekly = player.get("weekly") if isinstance(player.get("weekly"), dict) else {}
+    current_week = datetime.utcnow().strftime("%G-%V")
+    if weekly.get("weekId") != current_week:
+        weekly = {"weekId": current_week, "fishCaught": 0, "moneyEarned": 0}
+    weekly["fishCaught"] = int(weekly.get("fishCaught", 0)) + 1
+    player["weekly"] = weekly
 
     members[playerId] = player
     save_members(members)

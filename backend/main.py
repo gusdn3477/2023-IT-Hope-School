@@ -13,6 +13,8 @@ import funtion.fishSell as fishSell
 import funtion.inventory as inventory
 import funtion.encyclopedia_all as encyclopedia_all
 import funtion.encyclopedia_single as encyclopedia_single
+import funtion.leaderboard as leaderboard
+import funtion.transfer as transfer
 
 
 class FishingHandler(BaseHTTPRequestHandler):
@@ -143,9 +145,47 @@ class FishingHandler(BaseHTTPRequestHandler):
                 result = account.get_user(playerId)
                 self._send_json(result)
 
+        # 리더보드 조회
+        elif path == "/leaderboard":
+            # limit 옵션 허용 (기본 100) + mode: all | weekly
+            limit = body.get("limit")
+            mode = body.get("mode") or "all"
+            try:
+                limit_val = int(limit) if limit is not None else 100
+            except Exception:
+                limit_val = 100
+            result = leaderboard.get_leaderboard(limit_val, mode)
+            self._send_json(result)
+
         # 헬스 체크
         elif path == "/health":
             self._send_json({"success": True, "status": "ok"})
+
+        # 송금 (돈/물고기)
+        elif path == "/transfer":
+            result = transfer.transfer(body)
+            self._send_json(result)
+
+        # 유저 리스트 (검색용)
+        elif path == "/users":
+            from json_util.json_io import load_members
+            members = load_members()
+            # 비밀번호 제거, 기본 정보만
+            data = []
+            for pid, info in members.items():
+                if not isinstance(info, dict):
+                    continue
+                data.append({
+                    "playerId": pid,
+                    "nickname": info.get("nickname", pid),
+                    "rodLevel": info.get("rodLevel", 1),
+                    "level": info.get("level", 1)
+                })
+            # 간단 필터: query 포함 시 playerId 또는 nickname 부분일치
+            q = (body.get("query") or "").strip().lower()
+            if q:
+                data = [d for d in data if q in d["playerId"].lower() or q in d["nickname"].lower()]
+            self._send_json({"success": True, "users": data, "count": len(data)})
 
         else:
             self._send_json({"success": False, "error": "Invalid API endpoint", "path": path}, status=404)

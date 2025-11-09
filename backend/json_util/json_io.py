@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 import os
+from datetime import datetime
 
 MEMBER_FILE = "member.json"
 
@@ -33,6 +34,13 @@ def _normalize_player(player: dict) -> dict:
     normalized.setdefault("unlockedSites", [1])
     normalized.setdefault("fishCounts", [0] * 25)
     normalized.setdefault("fishList", [0] * 25)
+    # 주간 통계 기본값
+    if "weekly" not in normalized or not isinstance(normalized.get("weekly"), dict):
+        normalized["weekly"] = {
+            "weekId": datetime.utcnow().strftime("%G-%V"),  # ISO Year-Week
+            "fishCaught": 0,
+            "moneyEarned": 0,
+        }
     return normalized
 
 def load_members(filename: str = MEMBER_FILE) -> dict:
