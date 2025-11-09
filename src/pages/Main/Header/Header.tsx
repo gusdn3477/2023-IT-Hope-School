@@ -3,7 +3,7 @@ import { HeaderTitleWrapper, OutletWrapper, StyledButtonWrapper, StyledHeader, I
 import { Outlet } from 'react-router-dom';
 import gameLogo from '../../../assets/IT_HOPE_FISHING.png';
 import { MenuPopover } from '../../../component/popover/Menu';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { Button, Menu, MenuItem, Drawer, List, ListItem, ListItemText, IconButton, useMediaQuery } from '@mui/material';
 import coin from '../../../assets/coin.png';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../hooks/useStore';
@@ -30,7 +30,9 @@ export const Header = observer(() => {
   const [baitOpen, setBaitOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { userStore } = useStore();
+  const isMobile = useMediaQuery('(max-width:640px)');
 
   // 도감 진행도는 백엔드의 fishList(= discovered) 기준
   useEffect(() => {
@@ -56,51 +58,59 @@ export const Header = observer(() => {
               <strong>{userStore.user?.money ?? 0}원</strong>
             </strong>
           </HeaderTitleWrapper>
-          <StyledButtonWrapper>
-            <Button
-              variant="contained"
-              onClick={(e) => setFishMenuAnchorEl(e.currentTarget)}
-              style={{ fontFamily: 'Neo둥근모' }}
-            >
-              낚시
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => setFishdexOpen(true)}
-              style={{ fontFamily: 'Neo둥근모' }}
-            >
-              도감 <LibraryBooksIcon style={{ width: '20px', height: '20px' }} />
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => setLeaderboardOpen(true)}
-              style={{ fontFamily: 'Neo둥근모' }}
-            >
-              리더보드 <LeaderboardIcon style={{ width: '20px', height: '20px' }} />
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => setBaitOpen(true)}
-              style={{ fontFamily: 'Neo둥근모' }}
-            >
-              미끼 상점{' '}
-              <LocalGroceryStoreIcon style={{ width: '20px', height: '20px' }} />
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => setTransferOpen(true)}
-              style={{ fontFamily: 'Neo둥근모' }}
-            >
-              송금
-            </Button>
-            <Button
-              variant="contained"
-              onClick={(e) => setAnchorEl(e.currentTarget)}
-              style={{ fontFamily: 'Neo둥근모' }}
-            >
-              메뉴 <MenuIcon style={{ width: '20px', height: '20px' }} />
-            </Button>
-          </StyledButtonWrapper>
+          {!isMobile ? (
+            <StyledButtonWrapper>
+              <Button
+                variant="contained"
+                onClick={(e) => setFishMenuAnchorEl(e.currentTarget)}
+                style={{ fontFamily: 'Neo둥근모' }}
+              >
+                낚시
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => setFishdexOpen(true)}
+                style={{ fontFamily: 'Neo둥근모' }}
+              >
+                도감 <LibraryBooksIcon style={{ width: '20px', height: '20px' }} />
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => setLeaderboardOpen(true)}
+                style={{ fontFamily: 'Neo둥근모' }}
+              >
+                리더보드 <LeaderboardIcon style={{ width: '20px', height: '20px' }} />
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => setBaitOpen(true)}
+                style={{ fontFamily: 'Neo둥근모' }}
+              >
+                미끼 상점{' '}
+                <LocalGroceryStoreIcon style={{ width: '20px', height: '20px' }} />
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => setTransferOpen(true)}
+                style={{ fontFamily: 'Neo둥근모' }}
+              >
+                송금
+              </Button>
+              <Button
+                variant="contained"
+                onClick={(e) => setAnchorEl(e.currentTarget)}
+                style={{ fontFamily: 'Neo둥근모' }}
+              >
+                메뉴 <MenuIcon style={{ width: '20px', height: '20px' }} />
+              </Button>
+            </StyledButtonWrapper>
+          ) : (
+            <div>
+              <IconButton color="inherit" onClick={() => setMobileOpen(true)}>
+                <MenuIcon />
+              </IconButton>
+            </div>
+          )}
         </div>
       </StyledHeader>
       <InfoStrip>
@@ -112,8 +122,8 @@ export const Header = observer(() => {
             return `미끼: ${bait?.name ?? '없음'} (${fishingStore.baitInventory?.[fishingStore.selectedBaitId] ?? 0})`;
           })()}
         </span>
-        <span>|</span>
-  <span>낚시터 {fishingStore.groundLevel} / 도감 {fishingStore.dexSeenCount}/{Object.keys(FISH).length}</span>
+    <span>|</span>
+    <span>도감 {fishingStore.dexSeenCount}/{Object.keys(FISH).length}</span>
       </InfoStrip>
       <Menu anchorEl={fishMenuAnchorEl} open={Boolean(fishMenuAnchorEl)} onClose={() => setFishMenuAnchorEl(null)}>
         <MenuItem
@@ -134,17 +144,37 @@ export const Header = observer(() => {
         >
           낚싯대 강화
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            fishingStore.unlock();
-            setFishMenuAnchorEl(null);
-          }}
-          style={{ fontFamily: 'Neo둥근모' }}
-        >
-          낚시터 확장
-        </MenuItem>
+        {/* 낚시터 해금 버튼 제거 (rodLevel 기반 자동/명시 해금으로 변경됨) */}
       </Menu>
       <MenuPopover anchorEl={anchorEl} handleClose={() => setAnchorEl(null)} />
+      {/* 모바일 햄버거 메뉴 */}
+      <Drawer anchor="right" open={mobileOpen} onClose={() => setMobileOpen(false)} disableScrollLock>
+        <div style={{ width: 260 }}>
+          <List>
+            <ListItem button onClick={() => { setFishdexOpen(true); setMobileOpen(false); }}>
+              <ListItemText primary="도감" />
+            </ListItem>
+            <ListItem button onClick={() => { setLeaderboardOpen(true); setMobileOpen(false); }}>
+              <ListItemText primary="리더보드" />
+            </ListItem>
+            <ListItem button onClick={() => { setBaitOpen(true); setMobileOpen(false); }}>
+              <ListItemText primary="미끼 상점" />
+            </ListItem>
+            <ListItem button onClick={() => { setTransferOpen(true); setMobileOpen(false); }}>
+              <ListItemText primary="송금" />
+            </ListItem>
+            <ListItem button onClick={() => { setSellOpen(true); setMobileOpen(false); }}>
+              <ListItemText primary="판매" />
+            </ListItem>
+            <ListItem button onClick={() => { setRodOpen(true); setMobileOpen(false); }}>
+              <ListItemText primary="낚싯대 강화" />
+            </ListItem>
+            <ListItem button onClick={() => { userStore.logout(); setMobileOpen(false); }}>
+              <ListItemText primary="로그아웃" />
+            </ListItem>
+          </List>
+        </div>
+      </Drawer>
       <FishdexModal open={fishdexOpen} onClose={() => setFishdexOpen(false)} />
       <SellFishModal open={sellOpen} onClose={() => setSellOpen(false)} />
       <RodUpgradeModal open={rodOpen} onClose={() => setRodOpen(false)} />

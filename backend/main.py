@@ -178,8 +178,7 @@ class FishingHandler(BaseHTTPRequestHandler):
                 data.append({
                     "playerId": pid,
                     "nickname": info.get("nickname", pid),
-                    "rodLevel": info.get("rodLevel", 1),
-                    "level": info.get("level", 1)
+                    "rodLevel": info.get("rodLevel", 1)
                 })
             # 간단 필터: query 포함 시 playerId 또는 nickname 부분일치
             q = (body.get("query") or "").strip().lower()

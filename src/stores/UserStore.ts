@@ -7,7 +7,6 @@ interface UserData {
   id: string;
   nickname?: string;
   money?: number;
-  level?: number;
   rodLevel?: number;
   unlockedSites?: number[];
   baitInventory?: Record<string, number>;
@@ -16,12 +15,12 @@ interface UserData {
 class UserStore {
   isLogin = false;
   user: UserData | null = null;
-  leaderboardAll: { rank: number; playerId: string; nickname: string; level: number; rodLevel: number; dexCount: number; money: number }[] = [];
-  leaderboardWeekly: { rank: number; playerId: string; nickname: string; weeklyFishCaught: number; weeklyMoneyEarned: number; level: number; rodLevel: number; dexCount: number; money: number }[] = [];
+  leaderboardAll: { rank: number; playerId: string; nickname: string; rodLevel: number; dexCount: number; money: number }[] = [];
+  leaderboardWeekly: { rank: number; playerId: string; nickname: string; weeklyFishCaught: number; weeklyMoneyEarned: number; rodLevel: number; dexCount: number; money: number }[] = [];
   leaderboardLoading = false; // shared loading state for current fetch
   leaderboardError: string | null = null;
   transferLoading = false;
-  userSearchResults: { playerId: string; nickname: string; level: number; rodLevel: number }[] = [];
+  userSearchResults: { playerId: string; nickname: string; rodLevel: number }[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -52,7 +51,6 @@ class UserStore {
             id: res.data.playerId,
             nickname: res.data.data.nickname,
             money: res.data.data.money,
-            level: res.data.data.level,
             rodLevel: res.data.data.rodLevel,
             unlockedSites: res.data.data.unlockedSites,
             baitInventory: res.data.data.baitInventory,
@@ -80,7 +78,6 @@ class UserStore {
           if (!this.user) return;
           this.user.nickname = res.data.data.nickname;
           this.user.money = res.data.data.money;
-          this.user.level = res.data.data.level;
           this.user.rodLevel = res.data.data.rodLevel;
           this.user.unlockedSites = res.data.data.unlockedSites;
           this.user.baitInventory = res.data.data.baitInventory;

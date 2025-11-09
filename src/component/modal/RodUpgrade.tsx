@@ -16,6 +16,12 @@ const StyledDialog = styled(Dialog)`
     width: 520px;
     max-width: none;
   }
+  @media (max-width: 640px) {
+    & .MuiDialog-paper {
+      width: 95vw;
+      margin: 0;
+    }
+  }
 `;
 
 export const RodUpgradeModal = observer(({ open, onClose }: RodUpgradeProps) => {

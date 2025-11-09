@@ -25,6 +25,15 @@ const StyledDialog = styled(Dialog)`
     width: 800px;
     max-width: none;
   }
+  @media (max-width: 640px) {
+    & .MuiDialog-paper {
+      width: 100vw;
+      max-width: 100vw;
+      margin: 0;
+      height: 100vh;
+      border-radius: 0;
+    }
+  }
 `;
 
 const StyledCell = styled(TableCell)`

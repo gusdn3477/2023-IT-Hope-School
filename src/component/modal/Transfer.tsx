@@ -25,6 +25,15 @@ interface TransferModalProps {
 
 const StyledDialog = styled(Dialog)`
   & .MuiDialog-paper { width: 760px; max-width: none; }
+  @media (max-width: 640px) {
+    & .MuiDialog-paper {
+      width: 100vw;
+      max-width: 100vw;
+      margin: 0;
+      height: 100vh;
+      border-radius: 0;
+    }
+  }
 `;
 const StyledCell = styled(TableCell)`
   font-family: 'Neo둥근모';
@@ -114,7 +123,7 @@ export const TransferModal = observer(({ open, onClose }: TransferModalProps) =>
                     >
                       <StyledCell>{u.nickname}</StyledCell>
                       <StyledCell>{u.playerId}</StyledCell>
-                      <StyledCell>Lv {u.level}</StyledCell>
+                      {/* level removed */}
                     </TableRow>
                   ))}
                 </TableBody>
@@ -142,7 +151,7 @@ export const TransferModal = observer(({ open, onClose }: TransferModalProps) =>
                     <TableRow key={u.playerId} onClick={() => { setToPlayerId(u.playerId); userStore.clearUserSearch(); }} style={{ cursor: 'pointer' }}>
                       <StyledCell>{u.nickname}</StyledCell>
                       <StyledCell>{u.playerId}</StyledCell>
-                      <StyledCell>Lv {u.level}</StyledCell>
+                      {/* level removed */}
                     </TableRow>
                   ))}
                 </TableBody>
@@ -154,7 +163,7 @@ export const TransferModal = observer(({ open, onClose }: TransferModalProps) =>
               <TableRow>
                 <StyledCell align="center">선택</StyledCell>
                 <StyledCell align="center">이름</StyledCell>
-                <StyledCell align="center">레벨</StyledCell>
+                <StyledCell align="center">희귀도</StyledCell>
                 <StyledCell align="center">보유수</StyledCell>
               </TableRow>
             </TableHead>

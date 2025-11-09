@@ -15,7 +15,6 @@ def get_leaderboard(limit: int | None = 100, mode: str = "all"):
         if not isinstance(data, dict):
             continue
         nickname = data.get("nickname") or pid
-        level = int(data.get("level", 1) or 1)
         rod_level = int(data.get("rodLevel", 1) or 1)
         dex = _dex_count(data.get("fishList"))
         money = int(data.get("money", 0) or 0)
@@ -27,7 +26,6 @@ def get_leaderboard(limit: int | None = 100, mode: str = "all"):
         entry = {
             "playerId": pid,
             "nickname": nickname,
-            "level": level,
             "rodLevel": rod_level,
             "dexCount": dex,
             "money": money,
@@ -37,11 +35,11 @@ def get_leaderboard(limit: int | None = 100, mode: str = "all"):
         entries.append(entry)
 
     if mode == "weekly":
-        # 주간 랭킹: 물고기 잡은 수 -> 주간 수익 -> 레벨 -> rodLevel
-        entries.sort(key=lambda e: (e["weeklyFishCaught"], e["weeklyMoneyEarned"], e["level"], e["rodLevel"]), reverse=True)
+        # 주간 랭킹: 주간 어획 → 주간 수익 → rodLevel → dexCount
+        entries.sort(key=lambda e: (e["weeklyFishCaught"], e["weeklyMoneyEarned"], e["rodLevel"], e["dexCount"]), reverse=True)
     else:
-        # 전체 랭킹: level -> dexCount -> rodLevel -> money
-        entries.sort(key=lambda e: (e["level"], e["dexCount"], e["rodLevel"], e["money"]), reverse=True)
+        # 전체 랭킹: rodLevel → dexCount → money
+        entries.sort(key=lambda e: (e["rodLevel"], e["dexCount"], e["money"]), reverse=True)
 
     if isinstance(limit, int) and limit > 0:
         entries = entries[:limit]

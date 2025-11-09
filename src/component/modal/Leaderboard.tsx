@@ -28,6 +28,15 @@ const StyledDialog = styled(Dialog)`
     width: 720px;
     max-width: none;
   }
+  @media (max-width: 640px) {
+    & .MuiDialog-paper {
+      width: 100vw;
+      max-width: 100vw;
+      margin: 0;
+      height: 100vh;
+      border-radius: 0;
+    }
+  }
 `;
 
 const StyledCell = styled(TableCell)`
@@ -81,12 +90,10 @@ export const LeaderboardModal = observer(({ open, onClose }: LeaderboardProps) =
                 <>
                   <StyledCell align="center">주간 어획</StyledCell>
                   <StyledCell align="center">주간 수익</StyledCell>
-                  <StyledCell align="center">레벨</StyledCell>
                   <StyledCell align="center">낚싯대</StyledCell>
                 </>
               ) : (
                 <>
-                  <StyledCell align="center">레벨</StyledCell>
                   <StyledCell align="center">낚싯대</StyledCell>
                   <StyledCell align="center">도감</StyledCell>
                   <StyledCell align="center">보유금</StyledCell>
@@ -106,14 +113,12 @@ export const LeaderboardModal = observer(({ open, onClose }: LeaderboardProps) =
                       <>
                         <StyledCell align="center">{we.weeklyFishCaught}마리</StyledCell>
                         <StyledCell align="center">{we.weeklyMoneyEarned.toLocaleString()}원</StyledCell>
-                        <StyledCell align="center">Lv {we.level}</StyledCell>
                         <StyledCell align="center">Rod {we.rodLevel}</StyledCell>
                       </>
                     );
                   })()
                 ) : (
                   <>
-                    <StyledCell align="center">Lv {e.level}</StyledCell>
                     <StyledCell align="center">Rod {e.rodLevel}</StyledCell>
                     <StyledCell align="center">{e.dexCount}</StyledCell>
                     <StyledCell align="center">{e.money.toLocaleString()}원</StyledCell>

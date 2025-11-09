@@ -15,7 +15,6 @@ def signup(data):
         "nickname": data.get("nickname", "New Player"),
         "email": data.get("email", ""),
         "money": 5000,
-        "level": 1,
         "rodLevel": 1,
         "baitInventory": {"1": 5},
         "unlockedSites": [1],
@@ -42,5 +41,5 @@ def get_user(player_id: str):
     player = members.get(player_id)
     if not player:
         return {"success": False, "message": "사용자를 찾을 수 없습니다."}
-    safe_player = {k: v for k, v in player.items() if k != "password"}
+    safe_player = {k: v for k, v in player.items() if k not in ("password", "level")}
     return {"success": True, "playerId": player_id, "data": safe_player}
