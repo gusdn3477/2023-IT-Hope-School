@@ -14,6 +14,7 @@ import {
 import { useStore } from '../../hooks/useStore';
 import { useEffect, useState } from 'react';
 import type { FishDexEntry } from '../../stores/FishingStore';
+import { FISH_IMAGES } from '../../constants/fishImages';
 
 interface FishdexProps {
   open: boolean;
@@ -38,6 +39,14 @@ const StyledDialog = styled(Dialog)`
 
 const StyledCell = styled(TableCell)`
   font-family: 'Neo둥근모';
+`;
+
+const FishImage = styled.img<{ caught: boolean }>`
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  opacity: ${(p) => (p.caught ? 1 : 0.35)};
+  filter: ${(p) => (p.caught ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))' : 'grayscale(100%)')};
 `;
 
 export const FishdexModal = observer(({ open, onClose }: FishdexProps) => {
@@ -70,6 +79,7 @@ export const FishdexModal = observer(({ open, onClose }: FishdexProps) => {
       <Table>
         <TableHead>
           <TableRow>
+            <StyledCell align="center">이미지</StyledCell>
             <StyledCell align="center">이름</StyledCell>
             <StyledCell align="center">레벨</StyledCell>
             <StyledCell align="center">가격</StyledCell>
@@ -79,6 +89,19 @@ export const FishdexModal = observer(({ open, onClose }: FishdexProps) => {
         <TableBody>
           {fishData.map((f) => (
             <TableRow key={f.id}>
+              <StyledCell align="center">
+                <FishImage
+                  src={FISH_IMAGES[f.id] ?? FISH_IMAGES['unknown']}
+                  alt={f.name}
+                  caught={f.caught}
+                  onError={(e) => {
+                    const target = e.currentTarget as HTMLImageElement;
+                    if (target.dataset.fallbackApplied === 'true') return;
+                    target.dataset.fallbackApplied = 'true';
+                    target.src = FISH_IMAGES['unknown'];
+                  }}
+                />
+              </StyledCell>
               <StyledCell align="center">{f.name}</StyledCell>
               <StyledCell align="center">{f.level}</StyledCell>
               <StyledCell align="center">{f.price}원</StyledCell>

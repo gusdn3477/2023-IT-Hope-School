@@ -15,10 +15,10 @@ export const LandingWrapper = styled.div`
 
 export const ButtonWrapper = styled.div`
   width: 320px;
-  height: 220px;
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin-top: 30px;
   & img {
     margin-top: 35px;
   }

@@ -9,6 +9,7 @@ import EncounterModal from '../../../component/modal/Encounter';
 import { useStore } from '../../../hooks/useStore';
 import { observer } from 'mobx-react-lite';
 import { BAITS } from '../../../constants/bait';
+import { FISH_IMAGES } from '../../../constants/fishImages';
 import { GameContainer, GameInner } from './style';
 
 const StyledTitle = styled.img`
@@ -57,7 +58,7 @@ const HookResultText = styled.div<{ success: boolean }>`
 const Fishing = observer(() => {
   const { fishingStore, userStore, uiStore } = useStore();
   const [resultModalOpen, setResultModalOpen] = useState(false);
-  type FishingResult = { success: boolean; message?: string; fish?: { name?: string; price?: number } } | null;
+  type FishingResult = { success: boolean; message?: string; fish?: { id?: string; name?: string; price?: number } } | null;
   const [caughtFish, setCaughtFish] = useState<FishingResult>(null);
   const [loading, setLoading] = useState(false);
   const [timingOpen, setTimingOpen] = useState(false);
@@ -65,6 +66,7 @@ const Fishing = observer(() => {
   const [encounterId, setEncounterId] = useState<string | null>(null);
   const [encounterFishName, setEncounterFishName] = useState<string>('물고기');
   const [encounterFishLevel, setEncounterFishLevel] = useState<number>(1);
+  const [encounterFishId, setEncounterFishId] = useState<string | null>(null);
 
   // Hook cinematic + bite check
   const [hooking, setHooking] = useState(false);
@@ -120,6 +122,7 @@ const Fishing = observer(() => {
           setEncounterId(res.encounterId);
           setEncounterFishName(res.fish?.name ?? '물고기');
           setEncounterFishLevel(res.fish?.level ?? 1);
+          setEncounterFishId(res.fish?.id ?? null);
           setEncounterOpen(true);
         }
         setHooking(false);
@@ -139,6 +142,8 @@ const Fishing = observer(() => {
       result = await fishingStore.doFishing(score);
     }
     setCaughtFish(result || null);
+    if (result?.success) setEncounterFishId(result.fish?.id ?? null);
+    else setEncounterFishId(null);
     setResultModalOpen(true);
     setLoading(false);
   };
@@ -293,6 +298,11 @@ const Fishing = observer(() => {
           const price = fish?.price ?? 0;
           return `${name}을(를) 잡았습니다! (판매가 ${price}원)`;
         })()}
+        imageSrc={(() => {
+          if (!caughtFish?.success) return undefined;
+          const id = caughtFish.fish?.id;
+          return id ? (FISH_IMAGES[id] ?? FISH_IMAGES['unknown']) : FISH_IMAGES['unknown'];
+        })()}
       />
 
           <TimingMashModal
@@ -305,6 +315,7 @@ const Fishing = observer(() => {
       <EncounterModal
         open={encounterOpen}
         fishName={encounterFishName}
+        imageSrc={encounterFishId ? (FISH_IMAGES[encounterFishId] ?? FISH_IMAGES['unknown']) : undefined}
         onClose={handleEncounterClose}
       />
     </>

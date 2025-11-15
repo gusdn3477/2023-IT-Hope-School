@@ -64,6 +64,10 @@ def start_encounter(playerId: str, baitId: str | None):
     fishes_at_level = [fid for fid, f in fish_data.items() if f["level"] == lvl]
     caught_id = random.choice(fishes_at_level)
     caught_fish = fish_data[caught_id]
+    fish_payload = {
+        "id": str(caught_id),
+        **caught_fish
+    }
 
     # 세션 기록
     token = uuid.uuid4().hex
@@ -72,7 +76,7 @@ def start_encounter(playerId: str, baitId: str | None):
 
     members[playerId] = player
     save_members(members)
-    return {"success": True, "encounterId": token, "fish": caught_fish, "bait": bait_name}
+    return {"success": True, "encounterId": token, "fish": fish_payload, "bait": bait_name}
 
 def resolve_encounter(playerId: str, encounterId: str | None, score: float | None):
     members = load_members()
@@ -115,10 +119,15 @@ def resolve_encounter(playerId: str, encounterId: str | None, score: float | Non
     weekly["fishCaught"] = int(weekly.get("fishCaught", 0)) + 1
     player["weekly"] = weekly
 
+    fish_payload = {
+        "id": str(fish_id),
+        **fish
+    }
+
     members[playerId] = player
     save_members(members)
     ENCOUNTERS.pop(encounterId, None)
-    return {"success": True, "message": f"{fish['name']}을(를) 잡았습니다!", "fish": fish, "fishCounts": counts, "fishList": seen}
+    return {"success": True, "message": f"{fish['name']}을(를) 잡았습니다!", "fish": fish_payload, "fishCounts": counts, "fishList": seen}
 
 def attempt_fishing(playerId, baitId=None, score: float | None = None):
     members = load_members()
@@ -184,6 +193,10 @@ def attempt_fishing(playerId, baitId=None, score: float | None = None):
     fishes_at_level = [fid for fid, f in fish_data.items() if f["level"] == caught_level]
     caught_id = random.choice(fishes_at_level)
     caught_fish = fish_data[caught_id]
+    fish_payload = {
+        "id": str(caught_id),
+        **caught_fish
+    }
 
     fish_index = int(caught_id) - 1
     fish_counts = player.get("fishCounts", [0] * len(fish_data))
@@ -209,7 +222,7 @@ def attempt_fishing(playerId, baitId=None, score: float | None = None):
     return {
         "success": True,
         "message": f"{caught_fish['name']}을(를) 잡았습니다! (레벨 {caught_level}, 미끼: {bait_name})",
-        "fish": caught_fish,
+        "fish": fish_payload,
         "remainingBait": player["baitInventory"],
         "fishCounts": player["fishCounts"],
         "fishList": player["fishList"]

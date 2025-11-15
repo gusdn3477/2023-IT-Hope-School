@@ -1,6 +1,7 @@
 import { Dialog } from '@mui/material';
 import { useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
+import unknownFish from '../../assets/fish/unknown_fish.png';
 
 export interface EncounterModalProps {
   open: boolean;
@@ -63,17 +64,21 @@ export const EncounterModal = (props: EncounterModalProps) => {
     }
   }, [open, autoCloseMs, onClose]);
 
-  const fallback = '/fish/placeholder.png'; // user can add images in public/fish/
+  const fallback = unknownFish;
 
   return (
     <StyledDialog open={open} onClose={onClose} disableScrollLock>
       <Wrapper>
-        <Image src={imageSrc || fallback} alt={fishName} onError={(e) => {
-          const target = e.currentTarget as HTMLImageElement;
-          if (target.src !== window.location.origin + fallback) {
+        <Image
+          src={imageSrc || fallback}
+          alt={fishName}
+          onError={(e) => {
+            const target = e.currentTarget as HTMLImageElement;
+            if (target.dataset.fallbackApplied === 'true') return;
+            target.dataset.fallbackApplied = 'true';
             target.src = fallback;
-          }
-        }} />
+          }}
+        />
         <Text>
           야생의 <strong style={{ color: '#4FC3F7' }}>{fishName}</strong>가 나타났다!
         </Text>
