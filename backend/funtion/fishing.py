@@ -86,8 +86,14 @@ def resolve_encounter(playerId: str, encounterId: str | None, score: float | Non
     enc = ENCOUNTERS.get(encounterId)
     if not enc or enc.get("playerId") != playerId:
         return {"success": False, "message": "만료되었거나 잘못된 조우입니다."}
-    # 현재 구현: 조우된 물고기를 그대로 잡는다 (score는 보상/희귀도에 더 반영 가능)
-    # 향후: score에 따라 상향 등급 교체 로직 추가 가능
+    # 점수 기반 실패 처리: 게이지가 0이거나 0 이하 점수면 실패로 간주
+    survival_score = 0.0
+    if isinstance(score, (int, float)):
+        survival_score = max(0.0, min(1.0, float(score)))
+    if survival_score <= 0.0:
+        ENCOUNTERS.pop(encounterId, None)
+        return {"success": False, "message": "물고기를 놓쳤습니다."}
+
     fish_id = enc.get("fishId")
     fish = fish_data.get(fish_id)
     if not fish:

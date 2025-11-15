@@ -58,7 +58,7 @@ const HookResultText = styled.div<{ success: boolean }>`
 const Fishing = observer(() => {
   const { fishingStore, userStore, uiStore } = useStore();
   const [resultModalOpen, setResultModalOpen] = useState(false);
-  type FishingResult = { success: boolean; message?: string; fish?: { id?: string; name?: string; price?: number } } | null;
+  type FishingResult = { success: boolean; message?: string; fish?: { id?: string; name?: string; price?: number; image?: string } } | null;
   const [caughtFish, setCaughtFish] = useState<FishingResult>(null);
   const [loading, setLoading] = useState(false);
   const [timingOpen, setTimingOpen] = useState(false);
@@ -67,6 +67,8 @@ const Fishing = observer(() => {
   const [encounterFishName, setEncounterFishName] = useState<string>('물고기');
   const [encounterFishLevel, setEncounterFishLevel] = useState<number>(1);
   const [encounterFishId, setEncounterFishId] = useState<string | null>(null);
+  const [encounterFishImage, setEncounterFishImage] = useState<string | null>(null);
+  const [resultFishImage, setResultFishImage] = useState<string | null>(null);
 
   // Hook cinematic + bite check
   const [hooking, setHooking] = useState(false);
@@ -116,14 +118,21 @@ const Fishing = observer(() => {
           uiStore.pushNotification('info', '물고기를 놓쳤습니다...');
           return;
         }
-        // Success: proceed to encounter as before
-        const res = await fishingStore.startEncounter();
+                // Success: proceed to encounter as before
+                const res = await fishingStore.startEncounter();
+                console.log('Encounter response:', res);
         if (res?.success) {
+          const fishId = res.fish?.id ?? null;
+          const imagePath = res.fish?.image ?? (fishId ? FISH_IMAGES[fishId] ?? null : null);
           setEncounterId(res.encounterId);
           setEncounterFishName(res.fish?.name ?? '물고기');
           setEncounterFishLevel(res.fish?.level ?? 1);
-          setEncounterFishId(res.fish?.id ?? null);
+          setEncounterFishId(fishId);
+          setEncounterFishImage(imagePath);
           setEncounterOpen(true);
+        } else {
+          setEncounterId(null);
+          setEncounterFishImage(null);
         }
         setHooking(false);
         setHookPhase(null);
@@ -142,8 +151,15 @@ const Fishing = observer(() => {
       result = await fishingStore.doFishing(score);
     }
     setCaughtFish(result || null);
-    if (result?.success) setEncounterFishId(result.fish?.id ?? null);
-    else setEncounterFishId(null);
+    if (result?.success) {
+      const fishId = result.fish?.id ?? null;
+      const imagePath = result.fish?.image ?? (fishId ? FISH_IMAGES[fishId] ?? null : null);
+      setEncounterFishId(fishId);
+      setResultFishImage(imagePath);
+    } else {
+      setEncounterFishId(null);
+      setResultFishImage(encounterFishImage);
+    }
     setResultModalOpen(true);
     setLoading(false);
   };
@@ -299,9 +315,9 @@ const Fishing = observer(() => {
           return `${name}을(를) 잡았습니다! (판매가 ${price}원)`;
         })()}
         imageSrc={(() => {
-          if (!caughtFish?.success) return undefined;
-          const id = caughtFish.fish?.id;
-          return id ? (FISH_IMAGES[id] ?? FISH_IMAGES['unknown']) : FISH_IMAGES['unknown'];
+          if (resultFishImage) return resultFishImage;
+          const id = caughtFish?.fish?.id;
+          return id ? (FISH_IMAGES[id] ?? FISH_IMAGES['unknown']) : undefined;
         })()}
       />
 
@@ -315,7 +331,8 @@ const Fishing = observer(() => {
       <EncounterModal
         open={encounterOpen}
         fishName={encounterFishName}
-        imageSrc={encounterFishId ? (FISH_IMAGES[encounterFishId] ?? FISH_IMAGES['unknown']) : undefined}
+        fishId={encounterFishId}
+        imageSrc={encounterFishImage}
         onClose={handleEncounterClose}
       />
     </>

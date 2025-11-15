@@ -1,12 +1,14 @@
 import { Dialog } from '@mui/material';
 import { useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { FISH_IMAGES } from '../../constants/fishImages';
 import unknownFish from '../../assets/fish/unknown_fish.png';
 
 export interface EncounterModalProps {
   open: boolean;
   fishName: string;
-  imageSrc?: string;
+  fishId?: string | null;
+  imageSrc?: string | null;
   onClose: () => void;
   autoCloseMs?: number; // default 1200ms
 }
@@ -55,7 +57,7 @@ const Image = styled.img`
 `;
 
 export const EncounterModal = (props: EncounterModalProps) => {
-  const { open, fishName, imageSrc, onClose, autoCloseMs = 1200 } = props;
+  const { open, fishName, fishId, imageSrc, onClose, autoCloseMs = 1200 } = props;
 
   useEffect(() => {
     if (open) {
@@ -65,12 +67,12 @@ export const EncounterModal = (props: EncounterModalProps) => {
   }, [open, autoCloseMs, onClose]);
 
   const fallback = unknownFish;
-
+  const derivedSrc = imageSrc || (fishId ? FISH_IMAGES[fishId] ?? fallback : fallback);
   return (
     <StyledDialog open={open} onClose={onClose} disableScrollLock>
       <Wrapper>
         <Image
-          src={imageSrc || fallback}
+          src={derivedSrc}
           alt={fishName}
           onError={(e) => {
             const target = e.currentTarget as HTMLImageElement;
