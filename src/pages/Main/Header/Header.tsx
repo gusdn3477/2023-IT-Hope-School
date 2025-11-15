@@ -85,6 +85,9 @@ export const Header = observer(() => {
         <div style={{ display: 'flex' }}>
           <HeaderTitleWrapper>
             <strong style={{ display: 'flex', alignItems: 'center' }}>
+              <strong style={{
+                marginRight:'15px'
+              }}>{userStore?.user?.nickname}님 안녕하세요</strong>
               <img src={coin} width={24} height={24} />
               <strong>{userStore.user?.money ?? 0}원</strong>
             </strong>
