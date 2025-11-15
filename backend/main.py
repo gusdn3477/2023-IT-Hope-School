@@ -1,6 +1,7 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
 import json
+import os
 from json_util.json_io import migrate_member_file
 
 # 기능 모듈들 (폴더명이 "funtion" 으로 되어 있어 오타이지만 그대로 사용)
@@ -196,8 +197,9 @@ def run():
         migrate_member_file()
     except Exception as e:
         print("member.json migrate skipped:", e)
-    server = HTTPServer(("", 8000), FishingHandler)
-    print("서버 시작!")
+    port = int(os.environ.get("PORT", "8080"))
+    server = HTTPServer(("", port), FishingHandler)
+    print(f"서버 시작! (포트: {port})")
     server.serve_forever()
 
 

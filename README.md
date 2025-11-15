@@ -10,6 +10,7 @@ IT 희망학교 프로젝트는 프론트엔드 (Vite + React + MobX) / 백엔�
 - 간혹 특정 라이브러리 설치에 많은 시간이 소요되어 타임아웃 이슈가 발생합니다.
 - 그 경우 yarn install --network-timeout 6000000 명령어로 패키지를 설치해주시면 됩니다.
 - yarn dev로 개발 서버를 실행시킵니다.
+- 프론트단에서는 기본적으로 `/api` 경로를 사용하며, Vite dev 서버는 `vite.config.ts`에 설정된 proxy를 통해 백엔드(기본 8080)로 요청을 전달합니다. 다른 주소를 사용하고 싶다면 `.env` 파일에 `VITE_API_BASE_URL=...` 값을 지정하세요.
 
 ## 백엔드 서버 구동 방법
 
@@ -47,3 +48,16 @@ IT 희망학교 프로젝트는 프론트엔드 (Vite + React + MobX) / 백엔�
 - 인증 토큰(JWT) 도입 및 비밀번호 해시 처리
 - 테스트 코드(Pytest, React Testing Library) 추가
 - 낚시 확률/강화 로그 저장(분석용)
+
+## Docker 로컬 실행
+프론트엔드 빌드물(`dist` 폴더)이 준비되어 있다면, 단일 Docker 이미지를 빌드해서 백엔드(8080)와 프론트엔드(5173)를 동시에 기동할 수 있습니다.
+
+```bash
+docker build -t fishing-app .
+docker run --rm -p 8080:8080 -p 5173:5173 fishing-app
+```
+
+- 혹은 `docker compose up --build` (또는 `docker-compose up --build`) 으로 동일한 구성을 한 번에 띄울 수 있습니다.
+- 컨테이너 내부에서는 `backend/main.py` 가 `PORT` 환경변수(기본 8080)를 사용하여 API 서버를 실행합니다.
+- 프론트엔드 정적 파일은 Nginx가 `/app/dist` 경로를 루트로 사용해 5173 포트에서 SPA 모드로 서빙하며, `/api` 경로는 컨테이너 내부 `http://127.0.0.1:8080` 으로 프록시됩니다. 포트를 바꾸고 싶다면 `nginx/app.conf`의 `listen` 구성을 수정한 뒤 이미지를 다시 빌드해 주세요.
+- `dist` 폴더가 최신 빌드 상태인지 확인한 뒤 이미지를 빌드해야 합니다.

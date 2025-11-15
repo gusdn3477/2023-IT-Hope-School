@@ -1,0 +1,11 @@
+.git
+.gitignore
+.vscode
+.DS_Store
+node_modules
+.venv
+dist-cache
+*.log
+*.zip
+backend/__pycache__
+backend/funtion/__pycache__
