@@ -86,7 +86,6 @@ export const IntroVideo = styled.video`
   margin-bottom: 18px;
 `;
 
-export const ButtonsFadeContainer = styled.div<{ show: boolean }>`
+export const ButtonsFadeContainer = styled.div`
   transition: opacity 450ms ease;
-  opacity: ${props => (props.show ? 1 : 0)};
 `;
