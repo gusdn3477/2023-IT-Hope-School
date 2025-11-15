@@ -50,7 +50,7 @@ IT 희망학교 프로젝트는 프론트엔드 (Vite + React + MobX) / 백엔�
 - 낚시 확률/강화 로그 저장(분석용)
 
 ## Docker 로컬 실행
-프론트엔드 빌드물(`dist` 폴더)이 준비되어 있다면, 단일 Docker 이미지를 빌드해서 백엔드(8080)와 프론트엔드(5173)를 동시에 기동할 수 있습니다.
+Docker 이미지 빌드 과정에서 자동으로 프론트엔드(`yarn build`)를 수행하여 dist 결과물을 포함하므로, 별도의 수동 빌드 없이 단일 이미지로 백엔드(8080)와 프론트엔드(5173)를 동시에 기동할 수 있습니다.
 
 ```bash
 docker build -t fishing-app .
@@ -60,4 +60,14 @@ docker run --rm -p 8080:8080 -p 5173:5173 fishing-app
 - 혹은 `docker compose up --build` (또는 `docker-compose up --build`) 으로 동일한 구성을 한 번에 띄울 수 있습니다.
 - 컨테이너 내부에서는 `backend/main.py` 가 `PORT` 환경변수(기본 8080)를 사용하여 API 서버를 실행합니다.
 - 프론트엔드 정적 파일은 Nginx가 `/app/dist` 경로를 루트로 사용해 5173 포트에서 SPA 모드로 서빙하며, `/api` 경로는 컨테이너 내부 `http://127.0.0.1:8080` 으로 프록시됩니다. 포트를 바꾸고 싶다면 `nginx/app.conf`의 `listen` 구성을 수정한 뒤 이미지를 다시 빌드해 주세요.
-- `dist` 폴더가 최신 빌드 상태인지 확인한 뒤 이미지를 빌드해야 합니다.
+- `dist` 폴더는 Docker 빌드 과정에서 자동으로 생성되므로, 로컬에 이전 빌드가 남아 있어도 무방합니다.
+
+## Docker 없이 실행
+Docker를 사용할 수 없는 환경이라면 Python만 설치되어 있어도 `run_local.py` 스크립트로 백엔드(8080)와 프론트엔드 정적 서버(5173)를 동시에 띄울 수 있습니다. `frontend_server.py`는 `/api` 경로를 로컬 백엔드로 프록시하므로, Docker 환경과 동일한 방식으로 API를 호출할 수 있습니다. 사전에 `yarn build`로 `dist` 폴더를 준비해 두었거나, 저장소에 포함된 최신 빌드물이 존재해야 합니다.
+
+```bash
+python run_local.py
+```
+
+- 스크립트는 `backend/main.py`와 `frontend_server.py`를 각각 실행합니다.
+- 프론트는 `http://localhost:5173`, API는 동일 호스트의 `/api` 경로를 통해 백엔드(8080)로 전달됩니다.
