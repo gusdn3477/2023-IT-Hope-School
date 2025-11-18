@@ -7,16 +7,16 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends bash nginx \
+    && apt-get install -y --no-install-recommends nginx \
     && rm -rf /var/lib/apt/lists/*
 
-COPY . .
-COPY dist /app/dist
+COPY backend ./backend
+COPY account.json bait.json fish.json fishing_sites.json market.json member.json ./
 COPY nginx/app.conf /etc/nginx/conf.d/app.conf
+COPY dist ./dist
 
-RUN rm -f /etc/nginx/sites-enabled/default /etc/nginx/conf.d/default.conf || true \
-    && chmod +x /app/docker-entrypoint.sh
+RUN rm -f /etc/nginx/sites-enabled/default /etc/nginx/conf.d/default.conf || true
 
 EXPOSE 8080 80
 
-CMD ["bash", "/app/docker-entrypoint.sh"]
+CMD ["sh", "-c", "python backend/main.py & exec nginx -g 'daemon off;'"]
