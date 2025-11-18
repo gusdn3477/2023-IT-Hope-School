@@ -63,11 +63,14 @@ docker run --rm -p 8080:8080 -p 5173:5173 fishing-app
 - `dist` 폴더는 Docker 빌드 과정에서 자동으로 생성되므로, 로컬에 이전 빌드가 남아 있어도 무방합니다.
 
 ## Docker 없이 실행
-Docker를 사용할 수 없는 환경이라면 Python만 설치되어 있어도 `run_local.py` 스크립트로 백엔드(8080)와 프론트엔드 정적 서버(5173)를 동시에 띄울 수 있습니다. `frontend_server.py`는 `/api` 경로를 로컬 백엔드로 프록시하므로, Docker 환경과 동일한 방식으로 API를 호출할 수 있습니다. 사전에 `yarn build`로 `dist` 폴더를 준비해 두었거나, 저장소에 포함된 최신 빌드물이 존재해야 합니다.
+Docker를 사용할 수 없는 환경이라면 Python만 설치되어 있어도 `run_local.py` 스크립트로 백엔드와 프론트엔드 정적 서버를 동시에 띄울 수 있습니다. `frontend_server.py`는 `/api` 경로를 로컬 백엔드로 프록시하므로, Docker 환경과 동일한 방식으로 API를 호출할 수 있습니다. 사전에 `yarn build`로 `dist` 폴더를 준비해 두었거나, 저장소에 포함된 최신 빌드물이 존재해야 합니다.
 
 ```bash
 python run_local.py
+# 혹은 포트를 변경하고 싶다면
+python run_local.py --frontend-port 80 --backend-port 9000
 ```
 
 - 스크립트는 `backend/main.py`와 `frontend_server.py`를 각각 실행합니다.
-- 프론트는 `http://localhost:5173`, API는 동일 호스트의 `/api` 경로를 통해 백엔드(8080)로 전달됩니다.
+- 기본값은 백엔드 8080, 프론트 80이지만 `--backend-port`, `--frontend-port` 플래그 또는 `RUN_LOCAL_BACKEND_PORT` / `RUN_LOCAL_FRONTEND_PORT` 환경변수로 조절할 수 있습니다.
+- 프론트는 `http://localhost:<frontend-port>` (기본 80), API는 동일 호스트의 `/api` 경로를 통해 백엔드로 전달됩니다. 1024 이하 포트를 사용하면 OS 권한에 따라 관리자 권한이 필요할 수 있습니다.
